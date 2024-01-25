@@ -1,0 +1,18 @@
+<form (ngSubmit)="login()" class="example-form">
+    <mat-form-field class="example-full-width">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="user.name" name="name" placeholder="Name" required>
+    </mat-form-field>
+  
+    <mat-form-field class="example-full-width">
+      <mat-label>Last Name</mat-label>
+      <input matInput [(ngModel)]="user.lastName" name="lastName" placeholder="Last Name" required>
+    </mat-form-field>
+  
+    <mat-form-field class="example-full-width">
+      <mat-label>Username</mat-label>
+      <input matInput [(ngModel)]="user.username" name="username" placeholder="Username" required>
+    </mat-form-field>
+  
+    <button class="loginButton" mat-raised-button color="primary" type="submit">Login</button>
+  </form>
