@@ -1,0 +1,8 @@
+<!-- friendrequestdialog.component.html -->
+<div>
+    <h2>Friend Request</h2>
+    <p>{{ data.name }} {{ data.lastName }} ({{ data.peerId }}) wants to be your friend.</p>
+    <button mat-button color="primary" (click)="acceptFriendRequest()">Accept</button>
+    <button mat-button color="warn" (click)="rejectFriendRequest()">Reject</button>
+  </div>
+  

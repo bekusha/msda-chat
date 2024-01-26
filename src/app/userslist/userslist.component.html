@@ -1,5 +1,6 @@
 <ul>
     <li *ngFor="let user of allUsers">
-        {{user}}
+       <div (click)="sendFriendRequest(user.peerId)"> {{user.name}}</div>
+        <!-- <button (click)="sendFriendRequest(user.peerId)">send friend request</button> -->
     </li>
 </ul>

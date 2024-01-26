@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import Peer, { DataConnection } from 'peerjs'; 
 import { v4 as uuidv4 } from 'uuid'; 
+import { SignallingService } from './signalling.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,9 @@ export class PeerService {
   private peers: string[] = [];
   // private connections : {[key: string]: DataConnection} = {}
 
-  constructor() { 
+  constructor(
+    private signalingService : SignallingService
+  ) { 
     this.peer = new Peer({
       host: 'localhost',
       port: 9000,
@@ -28,7 +31,6 @@ export class PeerService {
     this.peer.on('connection', (conn) => {
       conn.on('open', () => {
         conn.on('data', this.handleReceivedData);
-        this.peers.push(conn.peer);
         console.log(`connected to peer: ${conn.peer} `)
       })
       
@@ -46,7 +48,7 @@ export class PeerService {
     const conn = this.peer.connect(otherPeerId)
     conn.on('open', () => {
       conn.on('data', this.handleReceivedData);
-      this.peers.push(conn.peer)
+     
       console.log(`Connected to peer: ${conn.peer}`);
     })
     return conn;

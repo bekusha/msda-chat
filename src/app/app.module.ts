@@ -9,19 +9,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { FormsModule } from '@angular/forms';
 import { UserslistComponent } from './userslist/userslist.component';
+import { FriendrequestdialogComponent } from './friendrequestdialog/friendrequestdialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    UserslistComponent
+    UserslistComponent,
+    FriendrequestdialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

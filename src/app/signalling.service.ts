@@ -34,7 +34,29 @@ export class SignallingService {
         console.log(data)
       });
     });
+
+   
   }
+
+  emitFriendRequest(targetPeerId: string):void{
+    console.log('request sending')
+    this.socket.emit('send-friend-request', {target: targetPeerId})
+  }
+
+  emitFriendRequestAccepted(senderPeerId: string): void{
+    this.socket.emit('friend-request-accepted', {senderPeerId})
+  }
+
+  emitFriendRequestRejected(senderPeerId:string){
+    this.socket.emit('friend-request-rejected', {senderPeerId})
+  }
+
+  listenForFriendRequest():Observable<any>{
+    return this.listen('friend-request-received')
+  }
+
+
+
   
 
 }
