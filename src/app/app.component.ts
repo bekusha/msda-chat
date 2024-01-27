@@ -19,23 +19,27 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.signalingService.listenForFriendRequest().subscribe((request: any) => {
-      this.openFriendRequestDialog(request.from.peerId);
+      this.openFriendRequestDialog(request.from);
       console.log(request)
     })
     
   }
 
-  openFriendRequestDialog(peerId:string){
-    console.log(peerId)
+  openFriendRequestDialog(user:User){
+    console.log(user.peerId)
     const dialogRef = this.dialog.open(FriendrequestdialogComponent, {
-      data: {peerId: peerId}
+      data: {peerId: user.peerId}
     })
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result === true) {
-        console.log(`Friend request accepted by ${result}`);
+        console.log(`Friend request accepted by ${user.peerId} + ${user}`);
+        
+        this.signalingService.addFriend(user);
+        // dialogRef.close(true)
+
       } else if (result === false) {
-        console.log(`Friend request rejected by ${result}`);
+        console.log(`Friend request rejected by ${user.peerId}`);
       }
     });
     

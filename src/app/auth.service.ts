@@ -23,6 +23,7 @@ export class AuthService {
       this.currentUser = user;
       this.allUsers.push(this.currentUser)
       this.signalingService.registerUser(this.currentUser)
-    }
+      this.signalingService.setCurrentUserUuid(this.currentUser.peerId)
+} 
   }
 }

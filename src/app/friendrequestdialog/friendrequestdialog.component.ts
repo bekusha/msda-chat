@@ -17,7 +17,8 @@ export class FriendrequestdialogComponent {
   ){}
 
   acceptFriendRequest(){
-    // this.signalingService.emitFriendRequest(this.data.peerId)
+    const receiverUuid = this.signalingService.getCurrentUserUuid()
+    this.signalingService.emitFriendRequestAccepted(this.data.peerId, receiverUuid!)
     this.dialogref.close(true)
     console.log('dialog accepted')
   }
