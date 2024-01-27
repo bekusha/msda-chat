@@ -14,10 +14,10 @@ export class PeerService {
   private myId: string = uuidv4();
   private peers: string[] = [];
   private connections : {[key: string]: DataConnection} = {}
-  private messageSubject = new Subject<Message>()
+  private messages: Message[] = []
 
   constructor(
-    private signalingService : SignallingService
+    
   ) { 
     this.peer = new Peer({
       host: 'localhost',
@@ -40,9 +40,7 @@ export class PeerService {
 });
   }
 
-  getMessageSubject() {
-    return this.messageSubject.asObservable();
-  }
+
 
   sendData(otherPeerId: string, message: Message) {
     console.log(`Sending data to peer: ${otherPeerId}`);
@@ -62,10 +60,17 @@ export class PeerService {
     const message = data as Message;
     if (message && typeof message === 'object') {
       console.log('Received data:', message);
-      this.messageSubject.next(message)
+      this.messages.push(message);
+      // this.messageSubject.next(message)
     } else {
       console.error('Received data is not a valid Message:', data);
     }
+  }
+  getMessages(): Message[] {
+    return this.messages;
+  }
+  clearMessages(): void {
+    this.messages = [];
   }
 
 

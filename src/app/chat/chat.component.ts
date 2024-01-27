@@ -26,10 +26,10 @@ export class ChatComponent {
         this.currentPeerId = selectedUserPeerId
       }
     })
-
-    this.peerService.getMessageSubject().subscribe((message:Message)=>{
-      this.messages.push(message)
-    })
+    this.messages = this.peerService.getMessages();
+    // this.peerService.getMessageSubject().subscribe((message:Message)=>{
+    //   this.messages.push(message)
+    // })
   }
 
   sendMessage(){
