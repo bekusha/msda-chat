@@ -1,0 +1,35 @@
+.message {
+  /* position: relative; */
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  max-width: 60%;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+}
+
+.received {
+  padding: 20px;
+  background-color: #eceff1; /* Light grey background */
+  text-align: left; /* Align text to the left */
+  margin-right: auto; /* Push the message box to the left */
+}
+
+.sent {
+  padding: 20px;
+  background-color: #42a5f5; /* Light blue background */
+  text-align: right; /* Align text to the right */
+  margin-left: auto; /* Push the message box to the right */
+  color: white; /* White text color */
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* .messagesContaier {
+  display: flex;
+  flex-direction: row;
+} */

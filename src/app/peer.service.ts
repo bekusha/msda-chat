@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import Peer, { DataConnection } from 'peerjs'; 
 import { v4 as uuidv4 } from 'uuid'; 
 import { SignallingService } from './signalling.service';
+import { Message } from './interfaces/messsage.interface';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +14,7 @@ export class PeerService {
   private myId: string = uuidv4();
   private peers: string[] = [];
   private connections : {[key: string]: DataConnection} = {}
+  private messageSubject = new Subject<Message>()
 
   constructor(
     private signalingService : SignallingService
@@ -37,7 +40,11 @@ export class PeerService {
 });
   }
 
-  sendData(otherPeerId: string, message: string) {
+  getMessageSubject() {
+    return this.messageSubject.asObservable();
+  }
+
+  sendData(otherPeerId: string, message: Message) {
     console.log(`Sending data to peer: ${otherPeerId}`);
     console.log(`Available connections:`, this.connections);
   
@@ -51,8 +58,14 @@ export class PeerService {
   }
   
 
-  private handleReceivedData(data:any): void {
-    console.log('Received data:', data);
+  private handleReceivedData(data:unknown): void {
+    const message = data as Message;
+    if (message && typeof message === 'object') {
+      console.log('Received data:', message);
+      this.messageSubject.next(message)
+    } else {
+      console.error('Received data is not a valid Message:', data);
+    }
   }
 
 
