@@ -4,6 +4,7 @@ import { User } from '../interfaces/user.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { SignallingService } from '../signalling.service';
 import { PeerService } from '../peer.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-userslist',
@@ -15,10 +16,11 @@ export class UserslistComponent {
   public allUsers: User[] | null = []
   public friendsList: User[] | null = []
 constructor(
-  private authService: AuthService,
+  
   private signalingService: SignallingService,
   private peerService: PeerService,  
-  private dialog: MatDialog){
+  private router : Router
+ ){
 
 }
 ngOnInit(): void {
@@ -48,6 +50,10 @@ sendFriendRequest(selectedPeerId: string): void{
   this.signalingService.emitFriendRequest(selectedPeerId)
   this.peerService.connectToPeer(selectedPeerId)
 
+}
+
+selectUserForChat(selectedUserPeerId: string){
+  this.router.navigate(['chat'], {queryParams: {peerId: selectedUserPeerId}})
 }
 
 logout(){

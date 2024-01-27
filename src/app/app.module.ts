@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { UserslistComponent } from './userslist/userslist.component';
 import { FriendrequestdialogComponent } from './friendrequestdialog/friendrequestdialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ChatComponent } from './chat/chat.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     AppComponent,
     LoginComponent,
     UserslistComponent,
-    FriendrequestdialogComponent
+    FriendrequestdialogComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,6 @@
 <h2>Friends</h2>
 <ul *ngIf="friendsList && friendsList.length > 0">
   <li *ngFor="let friend of friendsList">
-    {{ friend.name }} (Friend)
+    <div (click)="selectUserForChat(friend.peerId)">{{ friend.name }} (Friend)</div>
   </li>
 </ul>
