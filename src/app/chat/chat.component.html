@@ -21,10 +21,11 @@
   </div>
   <div class="chat-container">
     <button (click)="initiateCall()">Start Call</button>
-    <button (click)="getLocalStream()">End Call</button>
+    
   
     <div class="video-container">
-    
+      <video #localVideo autoplay muted></video>
+      <video #remoteVideo autoplay></video>
      
     </div>
   

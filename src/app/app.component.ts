@@ -41,12 +41,16 @@ export class AppComponent {
       switch (callData.status) {
         case 'incoming':
           this.handleIncomingCall(callData);
+          
           break;
         case 'connected':
-          // Handle connected call
+          if (callData.stream) {
+            console.log(callData.stream)
+            this.peerService.setRemoteStream(callData.stream);
+          }
           break;
         case 'closed':
-          // Handle call closure
+          // this.peerService.setRemoteStream(null)
           break;
         case 'error':
           // Handle errors

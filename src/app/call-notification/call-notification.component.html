@@ -1,10 +1,15 @@
 <h1 mat-dialog-title>Incoming Call</h1>
 <div mat-dialog-content>
   <p>Call from: {{data.callerId}}</p>
-  <!-- Add video elements here -->
+  
+  <div class="video-container">
+    <video #localVideo autoplay muted></video>
+    <video #remoteVideo autoplay></video>
+</div>
+
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>
-  <button mat-button (click)="acceptCall()">Accept</button>
+  <button mat-button (click)="acceptCall()" [disabled]="callAccepted">Accept</button>
   <button mat-button (click)="rejectCall()">Reject</button>
 </div>

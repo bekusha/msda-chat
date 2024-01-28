@@ -9,6 +9,7 @@
 <h2>Friends</h2>
 <ul *ngIf="friendsList && friendsList.length > 0">
   <li *ngFor="let friend of friendsList">
-    <div (click)="selectUserForChat(friend.peerId)">{{ friend.name }} (Friend)</div>
+    <div >{{ friend.name }} (Friend) <button (click)="selectUserForChat(friend.peerId)">start text chat</button></div>
+    
   </li>
 </ul>

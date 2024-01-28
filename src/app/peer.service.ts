@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import Peer, { DataConnection, MediaConnection } from 'peerjs'; 
 import { v4 as uuidv4 } from 'uuid'; 
 import { Message } from './interfaces/messsage.interface';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CallData } from './interfaces/callData.interface';
 
 
@@ -21,6 +21,8 @@ export class PeerService {
   private callSubject = new Subject<CallData>();
   private isIncomingCall = false;
   private mediaConnections: {[key: string]: MediaConnection} = {};
+  private remoteStream: MediaStream | null = null;
+  private remoteStreamSubject = new BehaviorSubject<MediaStream | null>(null);
 
 
   constructor(
@@ -45,6 +47,7 @@ export class PeerService {
     console.log(`connected to peer: ${conn.peer}`);
   });
 });
+// this.setupCallEvent();
 this.peer.on('call', (call) => {
   this.handleCall(call)
   const incomingCallData = {
@@ -108,26 +111,27 @@ this.peer.on('call', (call) => {
     
   }
 
-  private setupCallEvent() {
-    this.peer.on('call', (call) => {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then((stream) => {
-          call.answer(stream); // Answer the call with your own video/audio stream
-          this.handleCall(call);
-        })
-        .catch((err) => {
-          console.error('Failed to get local stream', err);
-        });
-    });
-  }
+  // private setupCallEvent() {
+  //   this.peer.on('call', (call) => {
+  //     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+  //       .then((stream) => {
+  //         call.answer(stream); // Answer the call with your own video/audio stream
+  //         this.handleCall(call);
+  //       })
+  //       .catch((err) => {
+  //         console.error('Failed to get local stream', err);
+  //       });
+  //   });
+  // }
 
 
 
 
 
-  answerCall(call: MediaConnection): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
+  answerCall(call: MediaConnection): Promise<MediaStream> {
+    return new Promise((resolve, reject) => {
       this.getUserMedia().then(stream => {
+        console.log(stream)
         call.answer(stream); // Answer the call with the local stream
   
         // Event: when the remote stream is received
@@ -140,14 +144,14 @@ this.peer.on('call', (call) => {
             callerId: callerId, 
             status: 'active' 
           });
-          
+          resolve(remoteStream)
         });
   
         // Event: when the call is closed
         call.on('close', () => {
           console.log(`Call with peer ${call.peer} has ended.`);
           this.callSubject.next({ call: call, status: 'closed' });
-          resolve(); // Resolve the promise when the call is closed
+           // Resolve the promise when the call is closed
         });
   
         // Event: when an error occurs during the call
@@ -236,5 +240,15 @@ this.peer.on('call', (call) => {
 
   getConnectedPeers(): string[]{
     return this.peers 
+  }
+
+  setRemoteStream(stream: MediaStream | null) {
+    this.remoteStream = stream;
+    this.remoteStreamSubject.next(stream);
+
+    console.log('setting remote stream', stream)
+  }
+  getRemoteStreamObservable(): Observable<MediaStream | null> {
+    return this.remoteStreamSubject.asObservable();
   }
 }
