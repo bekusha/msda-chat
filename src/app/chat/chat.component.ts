@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PeerService } from '../peer.service';
 import { ActivatedRoute } from '@angular/router'; 
 import { Message } from '../interfaces/messsage.interface';
-import { CallData } from '../interfaces/callData.interface';
+
 
 @Component({
   selector: 'app-chat',
@@ -79,12 +79,6 @@ export class ChatComponent {
 
   }
 
-  // private attachVideo(videoElement: HTMLVideoElement, stream: MediaStream) {
-  //   videoElement.srcObject = stream;
-  //   videoElement.onloadedmetadata = () => {
-  //     videoElement.play().catch(err => console.error('Error playing video:', err));
-  //   };
-  // }
 
   initiateCall() {
     if (!this.currentPeerId) {

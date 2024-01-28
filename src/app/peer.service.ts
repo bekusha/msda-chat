@@ -7,6 +7,7 @@ import { CallData } from './interfaces/callData.interface';
 
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -111,23 +112,6 @@ this.peer.on('call', (call) => {
     
   }
 
-  // private setupCallEvent() {
-  //   this.peer.on('call', (call) => {
-  //     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-  //       .then((stream) => {
-  //         call.answer(stream); // Answer the call with your own video/audio stream
-  //         this.handleCall(call);
-  //       })
-  //       .catch((err) => {
-  //         console.error('Failed to get local stream', err);
-  //       });
-  //   });
-  // }
-
-
-
-
-
   answerCall(call: MediaConnection): Promise<MediaStream> {
     return new Promise((resolve, reject) => {
       this.getUserMedia().then(stream => {
@@ -147,31 +131,28 @@ this.peer.on('call', (call) => {
           resolve(remoteStream)
         });
   
-        // Event: when the call is closed
         call.on('close', () => {
           console.log(`Call with peer ${call.peer} has ended.`);
           this.callSubject.next({ call: call, status: 'closed' });
-           // Resolve the promise when the call is closed
-        });
   
-        // Event: when an error occurs during the call
+        });
+
         call.on('error', err => {
           console.error(`Error during call with peer ${call.peer}: `, err);
           this.callSubject.next({ 
             call: call, 
             status: 'error' 
           });
-          reject(err); // Reject the promise on error
+          reject(err); 
         });
   
       }).catch(err => {
-        // Handle errors when trying to get the user's media
-        console.error('Failed to get local stream for answering the call', err);
+         console.error('Failed to get local stream for answering the call', err);
         this.callSubject.next({ 
           call: call, 
           status: 'failed' 
         });
-        reject(err); // Reject the promise if getUserMedia fails
+        reject(err);
       });
     });
   }
@@ -250,5 +231,11 @@ this.peer.on('call', (call) => {
   }
   getRemoteStreamObservable(): Observable<MediaStream | null> {
     return this.remoteStreamSubject.asObservable();
+  }
+
+  logout(){
+    this.peer.disconnect();
+    this.peer.destroy();
+
   }
 }

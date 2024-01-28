@@ -5,7 +5,6 @@ import { User } from './interfaces/user.interface';
 import { FriendrequestdialogComponent } from './friendrequestdialog/friendrequestdialog.component';
 import { PeerService } from './peer.service';
 import { CallNotificationComponent } from './call-notification/call-notification.component';
-// import { CallData } from './interfaces/callData.interface';
 import { Router } from '@angular/router';
 import { CallData } from './interfaces/callData.interface';
 
@@ -37,7 +36,7 @@ export class AppComponent {
   
     this.peerService.getCallStream().subscribe((callData: CallData) => {
       console.log('Call event received:', callData);
-      // Handle the call data based on its status
+      
       switch (callData.status) {
         case 'incoming':
           this.handleIncomingCall(callData);
@@ -50,7 +49,7 @@ export class AppComponent {
           }
           break;
         case 'closed':
-          // this.peerService.setRemoteStream(null)
+          this.peerService.setRemoteStream(null)
           break;
         case 'error':
           // Handle errors

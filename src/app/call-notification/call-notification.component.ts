@@ -57,13 +57,11 @@ acceptCall(): void {
   console.log('Accepting Call: ' + this.data.call.peer);
 
   this.peerService.getUserMedia().then((localStream) => {
-    // Attach the local stream to the local video element
     this.attachVideo(this.localVideo.nativeElement, localStream);
     this.localStream = localStream;
-
-    // Answer the call and handle the remote stream
+  
     this.peerService.answerCall(this.data.call).then((remoteStream) => {
-      // Attach the remote stream to the remote video element
+    
       this.attachVideo(this.remoteVideo.nativeElement, remoteStream);
       this.remoteStream = remoteStream;
       this.callAccepted = true;

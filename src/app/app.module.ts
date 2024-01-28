@@ -13,6 +13,7 @@ import { FriendrequestdialogComponent } from './friendrequestdialog/friendreques
 import { MatDialogModule } from '@angular/material/dialog';
 import { ChatComponent } from './chat/chat.component';
 import { CallNotificationComponent } from './call-notification/call-notification.component';
+import { AppLayoutComponent } from './app-layout/app-layout.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { CallNotificationComponent } from './call-notification/call-notification
     UserslistComponent,
     FriendrequestdialogComponent,
     ChatComponent,
-    CallNotificationComponent
+    CallNotificationComponent,
+    AppLayoutComponent
   ],
   imports: [
     BrowserModule,
