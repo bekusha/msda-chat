@@ -1,14 +1,14 @@
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" opened="false" class="sidenav">
-      <mat-toolbar>Menu</mat-toolbar>
-      <mat-nav-list>
+      <mat-toolbar color="accent">Menu</mat-toolbar>
+      <mat-nav-list class="sideNav">
         <a mat-list-item [routerLink]="['/userslist']">User List</a>
         <button mat-raised-button color="warn" (click)="logout()">Logout</button>
       </mat-nav-list>
     </mat-sidenav>
   
     <mat-sidenav-content>
-      <mat-toolbar color="primary">
+      <mat-toolbar color="accent">
         <button mat-icon-button (click)="sidenav.toggle()">
           <mat-icon>menu</mat-icon>
         </button>

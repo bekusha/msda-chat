@@ -1,7 +1,7 @@
 <div class="chat-container">
-  
+  <div >
     <mat-card class="messages-card">
-      <mat-card-content class="messages-list">
+      <mat-card-content class="messages-list" #scrollMe>
         <ng-container class="messagesContaier" *ngFor="let message of messages">
           <div class="message" [ngClass]="{'received': message.sender !== myId, 'sent': message.sender === myId}">
             <span class='messageTime'>{{message.timedate}}</span>
@@ -11,16 +11,16 @@
         </ng-container>
       </mat-card-content>
     </mat-card>
-    
+    </div>
     <div class="message-input">
       <mat-form-field class="message-input-field">
         <input [(ngModel)]="newMessage" matInput type="text" placeholder="Type a message..." />
       </mat-form-field>
-      <button mat-button color="primary" (click)="sendMessage()">Send</button>
+      <button class="sendButton" mat-stroked-button color="accent" (click)="sendMessage()">Send</button>
     </div>
   </div>
   <div class="chat-container">
-    <button (click)="initiateCall()">Start Call</button>
+    <button mat-raised-button color="accent" class="callButton" (click)="initiateCall()">Start Video Call</button>
     
   
     <div class="video-container">

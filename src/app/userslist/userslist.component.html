@@ -1,15 +1,39 @@
-<h2>All Users</h2>
-<ul *ngIf="allUsers">
-  <li *ngFor="let user of allUsers">
-    {{ user.name }}
-    <button (click)="sendFriendRequest(user.peerId)">Send Friend Request</button>
-  </li>
-</ul>
+<div class="container">
+<div class="usersPool" (click)="toggleAllUsers()">
+  
+  <div class="arrowPool">
+    <span>See All users pool  </span>
+    <mat-icon class="arrow">keyboard_arrow_right</mat-icon>
+  </div>
+<!-- <button color="warn" mat-raised-button>Users Pool</button> -->
+<mat-nav-list *ngIf="showAllUsers && allUsers!.length > 0">
+  <a mat-list-item *ngFor="let user of allUsers">
+    {{ user.name }}{{user.lastName}}
+    <button mat-button (click)="sendFriendRequest(user.peerId)">Send Friend Request</button>
+  </a>
+</mat-nav-list>
 
-<h2>Friends</h2>
-<ul *ngIf="friendsList && friendsList.length > 0">
-  <li *ngFor="let friend of friendsList">
-    <div >{{ friend.name }} (Friend) <button (click)="selectUserForChat(friend.peerId)">start text chat</button></div>
-    
-  </li>
-</ul>
+
+  <div class="emptyUsers" *ngIf="showAllUsers && allUsers!.length === 0">No registered users</div>
+</div>
+<div class="friendsContainer">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <h2>Friends</h2>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="friendsCard">
+      <mat-list *ngIf="friendsList && friendsList.length > 0">
+        <mat-list-item *ngFor="let friend of friendsList">
+          <div>{{ friend.name }} 
+            <button mat-button (click)="selectUserForChat(friend.peerId)">start text chat</button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+      <div *ngIf="friendsList && friendsList.length === 0">Add friend from users pool</div>
+    </mat-card-content>
+  </mat-card>
+</div>
+</div>
+

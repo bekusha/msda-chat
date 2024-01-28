@@ -1,12 +1,27 @@
+.message-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .message {
-  /* position: relative; */
+  position: relative;
   padding: 10px;
   margin: 5px;
+  margin-top: 20px;
   border-radius: 10px;
   max-width: 60%;
+  min-width: 40%;
   word-wrap: break-word;
   display: flex;
   flex-direction: column;
+}
+
+.messages-card {
+  min-height: 30rem;
+  max-height: 20rem;
+  overflow: scroll;
 }
 
 .received {
@@ -29,7 +44,26 @@
   flex-direction: column;
 }
 
-/* .messagesContaier {
+.message-input {
+  margin-top: 2rem;
   display: flex;
-  flex-direction: row;
-} */
+  justify-content: center;
+  align-items: center;
+}
+
+.sendButton {
+  margin-bottom: 1rem;
+}
+
+.messageTime {
+  position: absolute;
+  top: 1%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.callButton {
+  position: absolute;
+  right: 1rem;
+  top: 4rem;
+}

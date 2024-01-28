@@ -1,6 +1,13 @@
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .example-form {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   max-width: 200px;
   padding: 30px;
 }

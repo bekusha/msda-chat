@@ -20,6 +20,7 @@ export class UserslistComponent {
   public allUsers: User[] | null = []
   public friendsList: User[] | null = []
   localStream!: MediaStream;
+  showAllUsers = false;
   
 constructor(
   
@@ -50,6 +51,10 @@ ngOnInit(): void {
     }
   });
   
+}
+
+toggleAllUsers() {
+  this.showAllUsers = !this.showAllUsers;
 }
 
 
