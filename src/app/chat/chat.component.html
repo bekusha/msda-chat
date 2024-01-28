@@ -1,4 +1,5 @@
 <div class="chat-container">
+  
     <mat-card class="messages-card">
       <mat-card-content class="messages-list">
         <ng-container class="messagesContaier" *ngFor="let message of messages">
@@ -18,4 +19,16 @@
       <button mat-button color="primary" (click)="sendMessage()">Send</button>
     </div>
   </div>
+  <div class="chat-container">
+    <button (click)="initiateCall()">Start Call</button>
+    <button (click)="getLocalStream()">End Call</button>
+  
+    <div class="video-container">
+    
+     
+    </div>
+  
+  
+  </div>
+  
   

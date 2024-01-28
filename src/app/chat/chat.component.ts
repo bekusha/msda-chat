@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PeerService } from '../peer.service';
 import { ActivatedRoute } from '@angular/router'; 
 import { Message } from '../interfaces/messsage.interface';
+// import { CallData } from '../interfaces/callData.interface';
 
 @Component({
   selector: 'app-chat',
@@ -9,11 +10,16 @@ import { Message } from '../interfaces/messsage.interface';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent {
+
+  @ViewChild('localVideo') localVideo!: ElementRef;
+  @ViewChild('remoteVideo') remoteVideo!: ElementRef;
   
   messages:Message[] = []
   newMessage = ''
   currentPeerId = ''
  myId: string = '';
+ incomingCall: any | null = null; 
+ localStream!: MediaStream;
 
   constructor(private peerService: PeerService, private route: ActivatedRoute){}
 
@@ -27,9 +33,25 @@ export class ChatComponent {
       }
     })
     this.messages = this.peerService.getMessages();
-    // this.peerService.getMessageSubject().subscribe((message:Message)=>{
-    //   this.messages.push(message)
-    // })
+   
+    // this.peerService.getCallStream().subscribe((callData: any) => {
+    //   this.handleRemoteStream(callData.stream)
+    // });
+    // this.getLocalStream()
+
+  }
+
+ 
+    async getLocalStream(): Promise<MediaStream> {
+    const stream = await this.peerService.getUserMedia();
+      this.localStream = stream;
+      this.localVideo.nativeElement.srcObject = stream;
+      this.localVideo.nativeElement.muted = true;
+      return stream;
+  }
+
+  handleRemoteStream(remoteStream: MediaStream) {
+    this.remoteVideo.nativeElement.srcObject = remoteStream;
   }
 
   sendMessage(){
@@ -46,6 +68,21 @@ export class ChatComponent {
     this.newMessage = ''
     this.messages.push(message)
 
+  }
+
+
+
+
+  
+
+  initiateCall(){
+    if(!this.currentPeerId){
+      console.error('No Peer selected to call')
+      return
+    }
+    this.peerService.initiateCall(this.currentPeerId).then(call=>{
+      console.log('call initiated succesfully' + this.currentPeerId)
+    }).catch(err => console.error('Failed to initiate call:', err));
   }
 
 

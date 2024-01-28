@@ -12,6 +12,7 @@ import { UserslistComponent } from './userslist/userslist.component';
 import { FriendrequestdialogComponent } from './friendrequestdialog/friendrequestdialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ChatComponent } from './chat/chat.component';
+import { CallNotificationComponent } from './call-notification/call-notification.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { ChatComponent } from './chat/chat.component';
     LoginComponent,
     UserslistComponent,
     FriendrequestdialogComponent,
-    ChatComponent
+    ChatComponent,
+    CallNotificationComponent
   ],
   imports: [
     BrowserModule,
