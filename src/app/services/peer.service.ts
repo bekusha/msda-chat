@@ -5,7 +5,7 @@ import { Message } from '../interfaces/messsage.interface';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CallData } from '../interfaces/callData.interface';
 import { AuthService } from './auth.service';
-
+import { environment } from 'src/environments/environment';
 
 
 
@@ -44,12 +44,18 @@ export class PeerService {
 
   private initializePeer() {
     if (!this.peer) {
+      const iceServers = [
+        { urls: environment.STUN_URI },
+        {
+          urls: environment.TURN_URL,
+          username: environment.TURN_USERNAME,
+          credential: environment.TURN_CREDENTIAL
+        }
+      ];
       this.peer = new Peer(this.myId, {
-        host: 'localhost',
-        port: 9000,
-        path: '/myapp',
-        secure: false,
-        key: 'peerjs'
+        config: {
+          iceServers: iceServers
+        }
       });
   
       this.peer.on('open', (id) => {
