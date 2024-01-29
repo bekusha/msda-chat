@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PeerService } from '../peer.service';
+import { PeerService } from '../services/peer.service';
 import { CallData } from '../interfaces/callData.interface';
 
 @Component({

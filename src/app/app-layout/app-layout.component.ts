@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PeerService } from '../peer.service';
+import { PeerService } from '../services/peer.service';
 import {  Router } from '@angular/router';
 
 @Component({

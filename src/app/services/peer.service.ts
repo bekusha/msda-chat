@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import Peer, { DataConnection, MediaConnection } from 'peerjs'; 
 import { v4 as uuidv4 } from 'uuid'; 
-import { Message } from './interfaces/messsage.interface';
+import { Message } from '../interfaces/messsage.interface';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { CallData } from './interfaces/callData.interface';
+import { CallData } from '../interfaces/callData.interface';
+import { AuthService } from './auth.service';
+
+
 
 
 
@@ -14,7 +17,7 @@ import { CallData } from './interfaces/callData.interface';
 export class PeerService {
   
 
-  private peer:Peer;
+  private peer!:Peer;
   private myId: string = uuidv4();
   private peers: string[] = [];
   private connections : {[key: string]: DataConnection} = {}
@@ -24,43 +27,54 @@ export class PeerService {
   private mediaConnections: {[key: string]: MediaConnection} = {};
   private remoteStream: MediaStream | null = null;
   private remoteStreamSubject = new BehaviorSubject<MediaStream | null>(null);
+  
 
-
-  constructor(
-    
-  ) { 
-    this.peer = new Peer({
-      host: 'localhost',
-      port: 9000,
-      path: '/myapp',
-      secure: false, 
-      key: 'peerjs' 
-    });
-    this.peer.on('open', (id) =>{
-      this.myId = id;
-      
-      console.log(`My peer ID is: ${id}`);
- })
- this.peer.on('connection', (conn) => {
-  conn.on('open', () => {
-    this.connections[conn.peer] = conn;  // Now 'this' refers to the PeerService instance
-    conn.on('data', (data) => this.handleReceivedData(data));
-    console.log(`connected to peer: ${conn.peer}`);
-  });
-});
-// this.setupCallEvent();
-this.peer.on('call', (call) => {
-  this.handleCall(call)
-  const incomingCallData = {
-    call: call,
-    callerId: call.peer,
-    status: 'incoming'  // Indicates an incoming call
-  };
-  this.callSubject.next(incomingCallData)
-  this.handleCall(call)
-});
-
+  constructor(private authService: AuthService) {
+    this.subscribeToUser();
   }
+
+  private subscribeToUser() {
+    this.authService.currentUser$.subscribe(user => {
+      if (user && user.peerId !== this.myId) {
+        this.myId = user.peerId;
+        this.initializePeer();
+      }
+    });
+  }
+
+  private initializePeer() {
+    if (!this.peer) {
+      this.peer = new Peer(this.myId, {
+        host: 'localhost',
+        port: 9000,
+        path: '/myapp',
+        secure: false,
+        key: 'peerjs'
+      });
+  
+      this.peer.on('open', (id) => {
+        console.log(`PeerJS confirmed ID: ${id}`);
+      });
+  
+      this.peer.on('connection', (conn) => {
+        conn.on('open', () => {
+          this.connections[conn.peer] = conn;
+          conn.on('data', (data) => this.handleReceivedData(data));
+        });
+      });
+  
+      this.peer.on('call', (call) => {
+        this.handleCall(call);
+        const incomingCallData = {
+          call: call,
+          callerId: call.peer,
+          status: 'incoming'
+        };
+        this.callSubject.next(incomingCallData);
+      });
+    }
+  }
+  
 
   private handleCall(call: MediaConnection) {
     const callerId = call.peer;
@@ -198,12 +212,15 @@ this.peer.on('call', (call) => {
   connectToPeer(otherPeerId: string): DataConnection {
     const conn = this.peer.connect(otherPeerId);
     conn.on('open', () => {
-      this.connections[otherPeerId] = conn;  // Store the connection
-      conn.on('data', (data) => this.handleReceivedData(data));
-      console.log(`Connected to peer: ${otherPeerId}`);
+        this.connections[otherPeerId] = conn;  // Store the connection
+        conn.on('data', (data) => this.handleReceivedData(data));
+        console.log(`Connected to peer: ${otherPeerId}`);
+    });
+    conn.on('error', (err) => {
+        console.error(`Error connecting to peer ${otherPeerId}:`, err);
     });
     return conn;
-  }
+}
 
    async getUserMedia(video: boolean = true, audio: boolean = true): Promise<MediaStream> {
     try {
@@ -214,10 +231,10 @@ this.peer.on('call', (call) => {
     }
   }
 
-  getMyId():string{
-    console.log(this.myId)
-    return this.myId
-  }
+  // getMyId():string{
+  //   console.log(this.myId)
+  //   return this.myId
+  // }
 
   getConnectedPeers(): string[]{
     return this.peers 
@@ -233,9 +250,12 @@ this.peer.on('call', (call) => {
     return this.remoteStreamSubject.asObservable();
   }
 
-  logout(){
-    this.peer.disconnect();
-    this.peer.destroy();
-
+  logout() {
+    if (this.peer) {
+      this.peer.disconnect();
+      this.peer.destroy();
+    } else {
+      console.warn('Peer instance not found. Cannot disconnect or destroy.');
+    }
   }
 }

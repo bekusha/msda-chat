@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
-import { User } from './interfaces/user.interface';
+import { User } from '../interfaces/user.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class SignallingService {
   private socket:any;
   readonly uri: string = 'http://localhost:3000';
   private friendsList: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([])
-  private currentUserUuid: string | null = null;
+  // private currentUserUuid: string | null = null;
   
 
   constructor() {
@@ -23,12 +23,12 @@ export class SignallingService {
     console.log('register user from signalingService: ' + userData)
    }
 
-   setCurrentUserUuid(uuid: string) {
-    this.currentUserUuid = uuid;
-  }
-  getCurrentUserUuid(): string | null {
-    return this.currentUserUuid;
-  }
+  //  setCurrentUserUuid(uuid: string) {
+  //   this.currentUserUuid = uuid;
+  // }
+  // getCurrentUserUuid(): string | null {
+  //   return this.currentUserUuid;
+  // }
 
    addFriend(user:User){
     const currentFriends = this.friendsList.value;
@@ -69,7 +69,7 @@ export class SignallingService {
   }
 
   emitFriendRequest(targetPeerId: string):void{
-    console.log('request sending')
+    console.log('request sending' + targetPeerId)
     this.socket.emit('send-friend-request', {target: targetPeerId})
   }
 

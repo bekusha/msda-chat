@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SignallingService } from '../signalling.service';
+import { SignallingService } from '../services/signalling.service';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -13,14 +14,17 @@ export class FriendrequestdialogComponent {
   constructor(
     public dialogref: MatDialogRef<FriendrequestdialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private signalingService: SignallingService
+    private signalingService: SignallingService,
+    private authService: AuthService
   ){}
 
   acceptFriendRequest(){
-    const receiverUuid = this.signalingService.getCurrentUserUuid()
+    const currentUser = this.authService.getCurrentUser()
+    const receiverUuid = currentUser?.peerId
+    // const receiverUuid = this.signalingService.getCurrentUserUuid()
     this.signalingService.emitFriendRequestAccepted(this.data.peerId, receiverUuid!)
     this.dialogref.close(true)
-    console.log('dialog accepted')
+    console.log('dialog accepted' + this.data.peerId + receiverUuid)
   }
 
   rejectFriendRequest(){

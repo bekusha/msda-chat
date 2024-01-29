@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { SignallingService } from './signalling.service';
+import { SignallingService } from './services/signalling.service';
 import { User } from './interfaces/user.interface';
 import { FriendrequestdialogComponent } from './friendrequestdialog/friendrequestdialog.component';
-import { PeerService } from './peer.service';
+import { PeerService } from './services/peer.service';
 import { CallNotificationComponent } from './call-notification/call-notification.component';
 import { Router } from '@angular/router';
 import { CallData } from './interfaces/callData.interface';

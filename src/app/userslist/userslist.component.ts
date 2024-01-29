@@ -1,8 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { SignallingService } from '../signalling.service';
-import { PeerService } from '../peer.service';
+import { SignallingService } from '../services/signalling.service';
+import { PeerService } from '../services/peer.service';
 import { Router } from '@angular/router';
 import { CallData } from '../interfaces/callData.interface';
 import { CallNotificationComponent } from '../call-notification/call-notification.component';
@@ -59,6 +59,7 @@ toggleAllUsers() {
 
 
 sendFriendRequest(selectedPeerId: string): void{
+  console.log(selectedPeerId)
   this.signalingService.emitFriendRequest(selectedPeerId)
   this.peerService.connectToPeer(selectedPeerId)
 
