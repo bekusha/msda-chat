@@ -35,6 +35,12 @@ constructor(
 
 }
 ngOnInit(): void {
+  const savedFriendsList = sessionStorage.getItem('friendsList');
+  if (savedFriendsList && this.friendsList?.length! <= 0) {
+    console.log(savedFriendsList)
+    this.friendsList = JSON.parse(savedFriendsList) as User[];
+    console.log(this.friendsList)
+  }
   this.allUsers = this.authService.getAllUsers();
   // this.signalingService.listen('users-list').subscribe((usersData: User[]) => {
   //   this.allUsers = usersData;
@@ -42,15 +48,19 @@ ngOnInit(): void {
   // });
 
   
-  this.signalingService.getFriendsListObservable().subscribe((friendsData: User[]) => {
-    this.friendsList = friendsData;
-    console.log('Current friends list:', this.friendsList);
-  });
+  // this.signalingService.getFriendsListObservable().subscribe((friendsData: User[]) => {
+  //   this.friendsList = friendsData;
+  //   sessionStorage.setItem('friendsList', JSON.stringify(this.friendsList))
+  //   console.log('Current friends list:', this.friendsList);
+  // });
 
   this.signalingService.listenForFriendsListUpdate().subscribe((newFriend: User) => {
     if (this.friendsList && !this.friendsList.find(friend => friend.peerId === newFriend.peerId)) {
       this.friendsList.push(newFriend);
       console.log('Added new friend:', newFriend);
+      
+      // Save the updated friends list to sessionStorage
+      sessionStorage.setItem('friendsList', JSON.stringify(this.friendsList));
     }
   });
   
@@ -58,16 +68,6 @@ ngOnInit(): void {
 
 
 
-// private loadUsersFromLocalStorage() {
-//   const storedUsers = localStorage.getItem(this.allUserKey);
-//   if (storedUsers) {
-//     this.allUsers = JSON.parse(storedUsers);
-//     console.log('Loaded users from localStorage:', this.allUsers);
-//   } else {
-//     console.log('No users found in localStorage.');
-//     this.allUsers = [];
-//   }
-// }
 
 toggleAllUsers() {
   this.showAllUsers = !this.showAllUsers;

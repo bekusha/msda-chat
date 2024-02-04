@@ -38,6 +38,7 @@ export class SignallingService {
     }
    }
    getFriendsListObservable() {
+    
     return this.friendsList.asObservable();
   }
 
