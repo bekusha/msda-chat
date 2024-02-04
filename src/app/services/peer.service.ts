@@ -204,7 +204,6 @@ export class PeerService {
         console.log(`Sent message to peer: ${otherPeerId}`);
       });
     } else {
-      // Connection already exists, send the message
       conn.send(message);
       console.log(`Sent message to peer: ${otherPeerId}`);
     }

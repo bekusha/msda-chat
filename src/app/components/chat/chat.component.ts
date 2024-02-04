@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Message } from 'src/app/interfaces/messsage.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
+import { MediaConnection } from 'peerjs';
 
 @Component({
   selector: 'app-chat',
@@ -19,8 +20,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   currentPeerId = '';
   myId: string = '';
   incomingCall: any | null = null;
-  localStream!: MediaStream;
+  localStream: MediaStream | null = null;
   remoteStream!: MediaStream;
+  currentCall : MediaConnection | null = null
   private authSubscription!: Subscription;
 
   constructor(
@@ -82,14 +84,41 @@ export class ChatComponent implements OnInit, OnDestroy {
       console.error('No Peer selected to call');
       return;
     }
-
+  
     this.peerService.getUserMedia().then((localStream) => {
       this.localStream = localStream;
       this.localVideo.nativeElement.srcObject = localStream;
       this.localVideo.nativeElement.muted = true;
-      this.peerService.initiateCall(this.currentPeerId).then(call => {
-        console.log('Call initiated successfully: ' + this.currentPeerId);
-      }).catch(err => console.error('Failed to initiate call:', err));
+      
+      this.peerService.initiateCall(this.currentPeerId)
+        .then(call => {
+          this.currentCall = call; // Assign the call object to this.currentCall
+          console.log('Call initiated successfully: ' + this.currentPeerId);
+        })
+        .catch(err => {
+          console.error('Failed to initiate call:', err);
+          // Consider adding cleanup or state update logic here
+        });
+    }).catch(err => {
+      console.error('Failed to get user media:', err);
+      
     });
   }
+  
+  endCall() {
+    if (this.currentCall) {
+      this.peerService.endCall(this.currentCall);
+      this.currentCall = null; // Reset the currentCall to null after ending the call
+      
+      // Turn off the local stream
+      if (this.localStream) {
+        this.localStream.getTracks().forEach(track => track.stop());
+        this.localStream = null; // Reset the localStream to null after stopping all tracks
+      }
+      
+    } else {
+      console.error('No current call to end');
+    }
+  }
+  
 }
