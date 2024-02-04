@@ -35,10 +35,11 @@ constructor(
 
 }
 ngOnInit(): void {
-  this.signalingService.listen('users-list').subscribe((usersData: User[]) => {
-    this.allUsers = usersData;
-    console.log('Updated users list:', this.allUsers);
-  });
+  this.allUsers = this.authService.getAllUsers();
+  // this.signalingService.listen('users-list').subscribe((usersData: User[]) => {
+  //   this.allUsers = usersData;
+  //   console.log('Updated users list:', this.allUsers);
+  // });
 
   
   this.signalingService.getFriendsListObservable().subscribe((friendsData: User[]) => {
@@ -54,6 +55,8 @@ ngOnInit(): void {
   });
   
 }
+
+
 
 // private loadUsersFromLocalStorage() {
 //   const storedUsers = localStorage.getItem(this.allUserKey);

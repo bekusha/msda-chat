@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { User } from '../interfaces/user.interface';
 import { SignallingService } from './signalling.service';
 import { v4 as uuidv4 } from 'uuid';
-import { PeerService } from './peer.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,7 @@ export class AuthService {
 
   constructor(private signallingService: SignallingService,
    ) {
+    console.log(this.allUsers)
     this.loadInitialData();
     console.log(this.currentUser$)
   }
@@ -36,6 +37,7 @@ export class AuthService {
     if (existingUserIndex === -1) {
       user.peerId = user.peerId || uuidv4();
       this.allUsers.push(user);
+      this.updateUserState(user)
     } else {
       user = this.allUsers[existingUserIndex];
       console.log(`User ${user.name} ${user.lastName} (${user.username}) is already registered. Logging in with existing data.`);
@@ -64,7 +66,6 @@ export class AuthService {
 
   private updateUserState(user: User) {
     this.currentUserSubject.next(user);
-    this.userLoggedIn.emit(user); // Emit event when user state is updated
     sessionStorage.setItem(this.allUserKey, JSON.stringify(this.allUsers));
   }
   
@@ -79,11 +80,17 @@ export class AuthService {
         this.generateIdentifier(user) === storedCurrentUserIdentifier);
       if (currentUser) {
         this.currentUserSubject.next(currentUser);
-        console.log(currentUser)
-        this.signallingService.registerUser(currentUser)
-        // this.peerService.initializePeer()
+        console.log(currentUser);
+        this.signallingService.registerUser(currentUser);
+        // Don't add currentUser to allUsers here, as it should already be in the list.
       }
     }
+  
+    // Subscribe to updates from signalingService to keep allUsers updated
+    this.signallingService.listen('users-list').subscribe((usersData: User[]) => {
+      this.allUsers = usersData;
+      console.log('Updated users list:', this.allUsers);
+    });
   }
 
   // private loadInitialData() {
