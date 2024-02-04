@@ -1,11 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { User } from '../interfaces/user.interface';
+import { User } from 'src/app/interfaces/user.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { SignallingService } from '../services/signalling.service';
-import { PeerService } from '../services/peer.service';
+import { SignallingService } from 'src/app/services/signalling.service';
+import { PeerService } from 'src/app/services/peer.service';
 import { Router } from '@angular/router';
-import { CallData } from '../interfaces/callData.interface';
+import { CallData } from 'src/app/interfaces/callData.interface';
 import { CallNotificationComponent } from '../call-notification/call-notification.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-userslist',
@@ -21,9 +22,10 @@ export class UserslistComponent {
   public friendsList: User[] | null = []
   localStream!: MediaStream;
   showAllUsers = false;
+  private readonly allUserKey = 'allUsers';
   
 constructor(
-  
+  private authService : AuthService,
   private signalingService: SignallingService,
   private peerService: PeerService,  
   private router : Router,
@@ -52,6 +54,17 @@ ngOnInit(): void {
   });
   
 }
+
+// private loadUsersFromLocalStorage() {
+//   const storedUsers = localStorage.getItem(this.allUserKey);
+//   if (storedUsers) {
+//     this.allUsers = JSON.parse(storedUsers);
+//     console.log('Loaded users from localStorage:', this.allUsers);
+//   } else {
+//     console.log('No users found in localStorage.');
+//     this.allUsers = [];
+//   }
+// }
 
 toggleAllUsers() {
   this.showAllUsers = !this.showAllUsers;

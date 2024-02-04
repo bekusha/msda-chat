@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SignallingService } from '../services/signalling.service';
-import { AuthService } from '../services/auth.service';
+import { SignallingService } from 'src/app/services/signalling.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 @Component({

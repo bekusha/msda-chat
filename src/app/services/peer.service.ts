@@ -32,17 +32,25 @@ export class PeerService {
   constructor(private authService: AuthService) {
     this.subscribeToUser();
   }
-
   private subscribeToUser() {
     this.authService.currentUser$.subscribe(user => {
       if (user && user.peerId !== this.myId) {
+        console.log(user)
         this.myId = user.peerId;
         this.initializePeer();
+  
+        // Re-establish connections with peers after a page reload
+        for (const peerId of this.peers) {
+          if (!this.connections[peerId]) {
+            this.connectToPeer(peerId);
+          }
+        }
       }
     });
   }
 
-  private initializePeer() {
+  
+  public initializePeer() {
     if (!this.peer) {
       const iceServers = [
         { urls: environment.STUN_URI },
@@ -86,15 +94,15 @@ export class PeerService {
     const callerId = call.peer;
     
     call.on('stream', (remoteStream) => {
-      console.log('Received a call from peer:', callerId); // Log the callerId when receiving the call
+      console.log('Received a call from peer:', callerId); 
       const callData = { stream: remoteStream, call: call, callerId: callerId, status: 'connected' };
-      console.log('Emitting call data through callSubject', callData); // Log the call data
+      console.log('Emitting call data through callSubject', callData); 
       this.callSubject.next(callData);
       console.log(this.callSubject)
     });
   
     call.on('close', () => {
-      console.log('Closed call with peer:', callerId); // Log the callerId when closing the call
+      console.log('Closed call with peer:', callerId); 
       this.callSubject.next({ call: call, status: 'closed' });
     });
   
@@ -182,19 +190,43 @@ export class PeerService {
     call.close();
    
   }
-
-  sendData(otherPeerId: string, message: Message) {
+  async sendData(otherPeerId: string, message: Message) {
     console.log(`Sending data to peer: ${otherPeerId}`);
     console.log(`Available connections:`, this.connections);
   
     const conn = this.connections[otherPeerId];
-    if (conn) {
+    if (!conn) {
+      // Establish the connection and wait for it to open
+      const newConnection = this.connectToPeer(otherPeerId);
+      newConnection.on('open', () => {
+        // Once the connection is open, send the message
+        newConnection.send(message);
+        console.log(`Sent message to peer: ${otherPeerId}`);
+      });
+    } else {
+      // Connection already exists, send the message
       conn.send(message);
       console.log(`Sent message to peer: ${otherPeerId}`);
-    } else {
-      console.error(`No connection found for peer: ${otherPeerId}`);
     }
   }
+  
+
+  
+  
+
+  // sendData(otherPeerId: string, message: Message) {
+  //   console.log(`Sending data to peer: ${otherPeerId}`);
+  //   console.log(`Available connections:`, this.connections);
+  
+  //   const conn = this.connections[otherPeerId];
+  //   if (!conn) {
+  //     this.connectToPeer(otherPeerId)
+  //     conn.send(message);
+  //     console.log(`Sent message to peer: ${otherPeerId}`);
+  //   } else {
+  //     console.error(`No connection found for peer: ${otherPeerId}`);
+  //   }
+  // }
   
 
   private handleReceivedData(data:unknown): void {

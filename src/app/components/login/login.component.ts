@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../services/auth.service';
-import { User } from '../interfaces/user.interface';
+import { AuthService } from 'src/app/services/auth.service';
+import { User } from 'src/app/interfaces/user.interface';
 import { Router } from '@angular/router';
-import { PeerService } from '../services/peer.service';
-import { SignallingService } from '../services/signalling.service';
+import { PeerService } from 'src/app/services/peer.service';
+import { SignallingService } from 'src/app/services/signalling.service';
 
 
 @Component({

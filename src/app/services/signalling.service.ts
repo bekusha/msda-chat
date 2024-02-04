@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
 import { User } from '../interfaces/user.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,23 +15,23 @@ export class SignallingService {
   // private currentUserUuid: string | null = null;
   
 
-  constructor() {
+  constructor(
+    // private authService: AuthService
+  ) {
     this.socket = io(this.uri)
+   
    }
+
+
 
    registerUser(userData:User){
     this.socket.emit('register', userData);
-    console.log('register user from signalingService: ' + userData)
+    console.log('register user from signalingService: ' + JSON.stringify(userData))
    }
 
-  //  setCurrentUserUuid(uuid: string) {
-  //   this.currentUserUuid = uuid;
-  // }
-  // getCurrentUserUuid(): string | null {
-  //   return this.currentUserUuid;
-  // }
+ 
 
-   addFriend(user:User){
+  addFriend(user:User){
     const currentFriends = this.friendsList.value;
     if(!currentFriends.find(friend => friend.peerId === user.peerId)){
       this.friendsList.next([...currentFriends, user]);

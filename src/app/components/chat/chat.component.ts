@@ -1,8 +1,8 @@
 import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { PeerService } from '../services/peer.service';
+import { PeerService } from 'src/app/services/peer.service';
 import { ActivatedRoute } from '@angular/router';
-import { Message } from '../interfaces/messsage.interface';
-import { AuthService } from '../services/auth.service';
+import { Message } from 'src/app/interfaces/messsage.interface';
+import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({

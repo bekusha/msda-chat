@@ -1,7 +1,7 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PeerService } from '../services/peer.service';
-import { CallData } from '../interfaces/callData.interface';
+import { PeerService } from 'src/app/services/peer.service';
+import { CallData } from 'src/app/interfaces/callData.interface';
 
 @Component({
   selector: 'app-call-notification',
