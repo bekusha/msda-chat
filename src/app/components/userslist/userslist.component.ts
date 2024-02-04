@@ -42,18 +42,6 @@ ngOnInit(): void {
     console.log(this.friendsList)
   }
   this.allUsers = this.authService.getAllUsers();
-  // this.signalingService.listen('users-list').subscribe((usersData: User[]) => {
-  //   this.allUsers = usersData;
-  //   console.log('Updated users list:', this.allUsers);
-  // });
-
-  
-  // this.signalingService.getFriendsListObservable().subscribe((friendsData: User[]) => {
-  //   this.friendsList = friendsData;
-  //   sessionStorage.setItem('friendsList', JSON.stringify(this.friendsList))
-  //   console.log('Current friends list:', this.friendsList);
-  // });
-
   this.signalingService.listenForFriendsListUpdate().subscribe((newFriend: User) => {
     if (this.friendsList && !this.friendsList.find(friend => friend.peerId === newFriend.peerId)) {
       this.friendsList.push(newFriend);
@@ -65,9 +53,6 @@ ngOnInit(): void {
   });
   
 }
-
-
-
 
 toggleAllUsers() {
   this.showAllUsers = !this.showAllUsers;
@@ -81,7 +66,8 @@ sendFriendRequest(selectedPeerId: string): void{
 
 }
 
-selectUserForChat(selectedUserPeerId: string){
+selectUserForChat(user: User){
+  const selectedUserPeerId = user.peerId
   this.router.navigate(['chat'], {queryParams: {peerId: selectedUserPeerId}})
 }
 

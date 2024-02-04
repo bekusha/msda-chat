@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CallData } from '../interfaces/callData.interface';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
+import { User } from '../interfaces/user.interface';
 
 
 
@@ -78,11 +79,13 @@ export class PeerService {
       });
   
       this.peer.on('call', (call) => {
+        const user = this.authService.getCurrentUser()
         this.handleCall(call);
         const incomingCallData = {
           call: call,
           callerId: call.peer,
-          status: 'incoming'
+          status: 'incoming',
+          user: user || undefined
         };
         this.callSubject.next(incomingCallData);
       });
@@ -98,7 +101,7 @@ export class PeerService {
       const callData = { stream: remoteStream, call: call, callerId: callerId, status: 'connected' };
       console.log('Emitting call data through callSubject', callData); 
       this.callSubject.next(callData);
-      console.log(this.callSubject)
+      console.log(callData)
     });
   
     call.on('close', () => {
@@ -149,12 +152,14 @@ export class PeerService {
         // Event: when the remote stream is received
         call.on('stream', remoteStream => {
           const callerId = call.peer;
+          const user = this.authService.getCurrentUser()
           console.log(`Received remote stream from peer: ${callerId}`);
           this.callSubject.next({ 
             stream: remoteStream, 
             call: call, 
             callerId: callerId, 
-            status: 'active' 
+            status: 'active' ,
+            user: user!
           });
           resolve(remoteStream)
         });
@@ -209,23 +214,6 @@ export class PeerService {
     }
   }
   
-
-  
-  
-
-  // sendData(otherPeerId: string, message: Message) {
-  //   console.log(`Sending data to peer: ${otherPeerId}`);
-  //   console.log(`Available connections:`, this.connections);
-  
-  //   const conn = this.connections[otherPeerId];
-  //   if (!conn) {
-  //     this.connectToPeer(otherPeerId)
-  //     conn.send(message);
-  //     console.log(`Sent message to peer: ${otherPeerId}`);
-  //   } else {
-  //     console.error(`No connection found for peer: ${otherPeerId}`);
-  //   }
-  // }
   
 
   private handleReceivedData(data:unknown): void {
@@ -238,9 +226,12 @@ export class PeerService {
       console.error('Received data is not a valid Message:', data);
     }
   }
+
+
   getMessages(): Message[] {
     return this.messages;
   }
+
   clearMessages(): void {
     this.messages = [];
   }

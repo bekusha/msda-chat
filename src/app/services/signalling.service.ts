@@ -50,9 +50,6 @@ export class SignallingService {
     });
   }
 
-  //  getFriendsList(): User[] {
-  //   return this.friendsList.asObservable();
-  // }
 
    emit(event: string, data: any) {
     this.socket.emit(event, data);

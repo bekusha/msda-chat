@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SignallingService } from 'src/app/services/signalling.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { User } from 'src/app/interfaces/user.interface';
 
 
 @Component({
@@ -13,10 +14,12 @@ export class FriendrequestdialogComponent {
 
   constructor(
     public dialogref: MatDialogRef<FriendrequestdialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: User,
     private signalingService: SignallingService,
     private authService: AuthService
-  ){}
+  ){
+    console.log(this.data)
+  }
 
   acceptFriendRequest(){
     const currentUser = this.authService.getCurrentUser()

@@ -39,6 +39,7 @@ export class AppComponent {
       
       switch (callData.status) {
         case 'incoming':
+          console.log(callData.user)
           this.handleIncomingCall(callData);
           
           break;
@@ -63,11 +64,12 @@ export class AppComponent {
   }
 
   private handleIncomingCall(callData: CallData) {
-    console.log(`Incoming call from ${callData.callerId}`);
+    console.log(callData);
     const dialogRef = this.dialog.open(CallNotificationComponent, {
       width: '250px',
-      data: callData // Pass the callData to your dialog component
+      data: callData 
     });
+    
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed. Result:', result);
@@ -87,7 +89,7 @@ export class AppComponent {
   openFriendRequestDialog(user:User){
     console.log(user.peerId)
     const dialogRef = this.dialog.open(FriendrequestdialogComponent, {
-      data: {peerId: user.peerId}
+      data: user
     })
 
     dialogRef.afterClosed().subscribe((result: boolean) => {

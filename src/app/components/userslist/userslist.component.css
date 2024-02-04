@@ -1,32 +1,49 @@
 .container {
   position: relative;
+  display: flex; /* Added to align the child elements side by side */
+  justify-content: space-between; /* Distributes space between elements */
+  padding: 2rem; /* Added some padding for overall spacing */
 }
 
 .usersPool {
   display: flex;
-  justify-content: end;
+  flex-direction: column; /* Changed to column to stack elements vertically */
+  justify-content: flex-start; /* Aligns items to the start of the container */
   align-items: center;
-  margin-top: 4rem;
-  margin-bottom: 3rem;
-  height: 100%;
+  width: 45%; /* Adjusted width for balance */
+  margin-top: 2rem; /* Reduced margin for a tighter layout */
+  background-color: #f9f9f9; /* Light background for the section */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Added subtle shadow for depth */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Inner spacing */
 }
 
 .arrowPool {
   display: flex;
+  justify-content: space-between; /* Ensures the arrow and text are spaced out */
+  align-items: center;
+  width: 100%; /* Full width to utilize the space */
+  cursor: pointer; /* Indicates the element is clickable */
 }
 
 .allUsersList {
-  /* position: absolute; */
-  background-color: rgb(243, 237, 237);
+  background-color: #f3edf3;
   min-height: 50rem;
-  width: 70%;
-  margin-right: 10%;
-  z-index: 999;
-  left: 20%;
+  width: 100%; /* Adjusted to fill the space */
+  margin-top: 1rem; /* Reduced margin */
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; /* Ensures content doesn't spill out */
+  transition: all 0.3s ease-in-out; /* Smooth transition for any changes */
 }
 
-.emptyUsers {
+.emptyUsers,
+.friendsCard {
   padding: 10px;
+  background-color: white; /* Light background for contrast */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  margin-bottom: 10px; /* Space between elements */
 }
 
 .friendsContainer {
@@ -34,9 +51,75 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 4rem;
+  width: 45%; /* Adjusted width for balance */
+  background-color: #f9f9f9; /* Light background for the section */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Added subtle shadow for depth */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Inner spacing */
+  margin-top: 2rem; /* Consistent margin with .usersPool */
 }
 
 .friendsCard {
   min-width: 17rem;
+  transition: transform 0.3s ease-in-out; /* Smooth transition for hover effect */
+}
+
+button {
+  color: white; /* White text color */
+  border: none; /* Removes default border */
+  padding: 10px 20px; /* Padding inside the button */
+  text-align: center; /* Center the text inside the button */
+  text-decoration: none; /* Removes underline from text */
+  display: inline-block; /* Allows setting dimensions */
+  font-size: 16px; /* Increased font size */
+  margin: 4px 2px; /* Margin for spacing around the button */
+  cursor: pointer; /* Indicates the element is clickable */
+  border-radius: 4px; /* Rounded corners for the button */
+  transition: background-color 0.3s ease-in-out; /* Smooth transition for background color change */
+}
+
+.friendsListItem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+a {
+  color: inherit; /* Ensures links use the current text color */
+  text-decoration: none; /* Removes underline from links */
+}
+
+a:hover {
+  text-decoration: underline; /* Adds underline on hover for a visual cue */
+}
+
+@keyframes arrowBounce {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+.arrow {
+  transition: transform 0.3s ease-in-out; /* Smooth transition for the transform */
+}
+
+.arrowDown {
+  transform: rotate(90deg); /* Rotate arrow to point downwards */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .usersPool,
+  .friendsContainer {
+    width: 90%; /* Full width for smaller screens */
+    margin-top: 1rem;
+  }
 }

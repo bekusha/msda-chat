@@ -2,6 +2,7 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PeerService } from 'src/app/services/peer.service';
 import { CallData } from 'src/app/interfaces/callData.interface';
+import { User } from 'src/app/interfaces/user.interface';
 
 @Component({
   selector: 'app-call-notification',
@@ -26,22 +27,19 @@ constructor(
 callAccepted: boolean = false;
 localStream! : MediaStream
 remoteStream!: MediaStream;
+caller!: User
 
 
 ngOnInit(): void {
-  
-  // navigator.mediaDevices
-  //   .getUserMedia({ video: true, audio: true }) // You can specify the constraints as needed
-  //   .then((stream) => {
-  //     this.localStream = stream;
-  //     this.attachVideo(this.localVideo.nativeElement, this.localStream);
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error accessing local media:', error);
-  //   });
+console.log(this.data.callerId)
+const friendsList = JSON.parse(sessionStorage.getItem('friendsList') || '[]');
+this.caller = this.findUserByPeerId(friendsList, this.data.callerId!);
+console.log(this.caller)
 }
 
-
+private findUserByPeerId(friendsList: any[], peerId: string) {
+  return friendsList.find(user => user.peerId === peerId);
+}
 private attachVideo(videoElement: HTMLVideoElement, stream: MediaStream) {
   videoElement.srcObject = stream;
   videoElement.onloadedmetadata = () => {
@@ -77,6 +75,7 @@ acceptCall(): void {
 
 rejectCall(): void {
   console.log('Rejecting call:', this.data.call);
+  this.peerService.endCall(this.data.call)
   this.dialogRef.close();
 }
 

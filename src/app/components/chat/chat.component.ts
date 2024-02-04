@@ -5,6 +5,7 @@ import { Message } from 'src/app/interfaces/messsage.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
 import { MediaConnection } from 'peerjs';
+import { User } from 'src/app/interfaces/user.interface';
 
 @Component({
   selector: 'app-chat',
@@ -38,6 +39,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.route.queryParams.subscribe(params => {
       const selectedUserPeerId = params['peerId'];
+      
       console.log(selectedUserPeerId);
       if (selectedUserPeerId) {
         this.currentPeerId = selectedUserPeerId;
@@ -93,7 +95,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.peerService.initiateCall(this.currentPeerId)
         .then(call => {
           this.currentCall = call; // Assign the call object to this.currentCall
-          console.log('Call initiated successfully: ' + this.currentPeerId);
+          console.log('Call initiated successfully: ' );
         })
         .catch(err => {
           console.error('Failed to initiate call:', err);
