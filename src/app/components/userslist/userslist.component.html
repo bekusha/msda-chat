@@ -8,10 +8,10 @@
       
       <!-- List of Users -->
       <mat-nav-list *ngIf="showAllUsers && allUsers?.length! > 0">
-          <a mat-list-item *ngFor="let user of allUsers" href="#">
+          <div mat-list-item *ngFor="let user of allUsers">
               {{ user.name }} {{ user.lastName }}
               <button mat-stroked-button (click)="sendFriendRequest(user.peerId)">Add</button>
-          </a>
+          </div>
       </mat-nav-list>
       
       <!-- No Users Message -->

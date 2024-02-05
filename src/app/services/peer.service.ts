@@ -5,7 +5,7 @@ import { Message } from '../interfaces/messsage.interface';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CallData } from '../interfaces/callData.interface';
 import { AuthService } from './auth.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { User } from '../interfaces/user.interface';
 
 
