@@ -31,15 +31,15 @@ caller!: User
 
 
 ngOnInit(): void {
-console.log(this.data.callerId)
-const friendsList = JSON.parse(sessionStorage.getItem('friendsList') || '[]');
-this.caller = this.findUserByPeerId(friendsList, this.data.callerId!);
-console.log(this.caller)
+// console.log(this.data.callerId)
+// const friendsList = JSON.parse(sessionStorage.getItem('friendsList') || '[]');
+// this.caller = this.findUserByPeerId(friendsList, this.data.callerId!);
+// console.log(this.caller)
 }
 
-private findUserByPeerId(friendsList: any[], peerId: string) {
-  return friendsList.find(user => user.peerId === peerId);
-}
+// private findUserByPeerId(friendsList: any[], peerId: string) {
+//   return friendsList.find(user => user.peerId === peerId);
+// }
 private attachVideo(videoElement: HTMLVideoElement, stream: MediaStream) {
   videoElement.srcObject = stream;
   videoElement.onloadedmetadata = () => {
@@ -59,7 +59,7 @@ acceptCall(): void {
     this.localStream = localStream;
   
     this.peerService.answerCall(this.data.call).then((remoteStream) => {
-    
+      console.log(this.data)
       this.attachVideo(this.remoteVideo.nativeElement, remoteStream);
       this.remoteStream = remoteStream;
       this.callAccepted = true;

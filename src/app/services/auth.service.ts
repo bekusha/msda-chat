@@ -4,7 +4,6 @@ import { User } from '../interfaces/user.interface';
 import { SignallingService } from './signalling.service';
 import { v4 as uuidv4 } from 'uuid';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -13,97 +12,40 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
   private allUsers: User[] = [];
-  private readonly allUserKey = 'allUsers';
-  private readonly currentUserIdentifierKey = 'currentUserIdentifier';
 
-  constructor(private signallingService: SignallingService,
-   ) {
-    console.log(this.allUsers)
-    this.loadInitialData();
-    console.log(this.currentUser$)
+  constructor(private signallingService: SignallingService) {
+    this.loadCurrentUser();
+  }
+
+  private registerAndSetCurrentUser(user: User) {
+    this.signallingService.registerUser(user); // Register the user with the signalling service
+    this.currentUserSubject.next(user); // Set the user as the current user
+  }
+
+  private loadCurrentUser() {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      const retrievedUser: User = JSON.parse(storedUser);
+      this.registerAndSetCurrentUser(retrievedUser);
+    }
   }
 
   getCurrentUser(): User | null {
+    console.log(this.currentUserSubject.value);
     return this.currentUserSubject.value;
   }
 
-  getAllUsers() {
-    return this.allUsers;
-  }
-
   login(user: User) {
-    const existingUserIndex = this.allUsers.findIndex(u => 
-      u.name === user.name && u.lastName === user.lastName && u.username === user.username);
-    if (existingUserIndex === -1) {
-      user.peerId = user.peerId || uuidv4();
-      this.allUsers.push(user);
-      this.updateUserState(user)
-    } else {
-      user = this.allUsers[existingUserIndex];
-      console.log(`User ${user.name} ${user.lastName} (${user.username}) is already registered. Logging in with existing data.`);
-      
-    }
-    this.updateUserState(user);
-    const identifier = this.generateIdentifier(user);
-    sessionStorage.setItem(this.currentUserIdentifierKey, identifier); 
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.registerAndSetCurrentUser(user);
   }
 
-  // login(user: User) {
-  //   const existingUserIndex = this.allUsers.findIndex(u => u.username === user.username);
-  //   if (existingUserIndex === -1) {
-  //     user.peerId = user.peerId || uuidv4();
-  //     this.allUsers.push(user);
-  //   } else {
-  //     user = this.allUsers[existingUserIndex];
-  //     console.log(`User ${user.username} is already registered. Logging in with existing data.`);
-  //   }
-  //   this.updateUserState(user);
+  // doesUsernameExist(username: string): boolean {
+  //   return this.allUsers.some(user => user.username === username);
   // }
 
-  private generateIdentifier(user: User): string {
-    return `${user.name}-${user.lastName}-${user.username}`;
-  }
-
-  private updateUserState(user: User) {
-    this.currentUserSubject.next(user);
-    sessionStorage.setItem(this.allUserKey, JSON.stringify(this.allUsers));
-  }
-  
-  private loadInitialData() {
-    const storedAllUsers = sessionStorage.getItem(this.allUserKey);
-    const storedCurrentUserIdentifier = sessionStorage.getItem(this.currentUserIdentifierKey);
-    if (storedAllUsers) {
-      this.allUsers = JSON.parse(storedAllUsers);
-    }
-    if (storedCurrentUserIdentifier) {
-      const currentUser = this.allUsers.find(user => 
-        this.generateIdentifier(user) === storedCurrentUserIdentifier);
-      if (currentUser) {
-        this.currentUserSubject.next(currentUser);
-        console.log(currentUser);
-        this.signallingService.registerUser(currentUser);
-        // Don't add currentUser to allUsers here, as it should already be in the list.
-      }
-    }
-  
-    // Subscribe to updates from signalingService to keep allUsers updated
-    this.signallingService.listen('users-list').subscribe((usersData: User[]) => {
-      this.allUsers = usersData;
-      console.log('Updated users list:', this.allUsers);
-    });
-  }
-
-  // private loadInitialData() {
-  //   const storedAllUsers = sessionStorage.getItem(this.allUserKey);
-  //   if (storedAllUsers) {
-  //     this.allUsers = JSON.parse(storedAllUsers);
-  //     console.log(this.allUsers)
-  //   } else {
-  //     this.allUsers = [];
-  //   }
-  // }
-
-  doesUsernameExist(username: string): boolean {
-    return this.allUsers.some(user => user.username === username);
+  logout() {
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
   }
 }

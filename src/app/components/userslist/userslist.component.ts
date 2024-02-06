@@ -35,21 +35,13 @@ constructor(
 
 }
 ngOnInit(): void {
-  const savedFriendsList = sessionStorage.getItem('friendsList');
-  if (savedFriendsList && this.friendsList?.length! <= 0) {
-    console.log(savedFriendsList)
-    this.friendsList = JSON.parse(savedFriendsList) as User[];
-    console.log(this.friendsList)
-  }
-  this.allUsers = this.authService.getAllUsers();
+  this.signalingService.listen('users-list').subscribe((usersData: User[]) => {
+    this.allUsers = usersData;
+    console.log('Updated users list:', this.allUsers);
+  });
+  console.log(this.allUsers)
   this.signalingService.listenForFriendsListUpdate().subscribe((newFriend: User) => {
-    if (this.friendsList && !this.friendsList.find(friend => friend.peerId === newFriend.peerId)) {
-      this.friendsList.push(newFriend);
-      console.log('Added new friend:', newFriend);
-      
-      // Save the updated friends list to sessionStorage
-      sessionStorage.setItem('friendsList', JSON.stringify(this.friendsList));
-    }
+    this.friendsList!.push(newFriend); 
   });
   
 }

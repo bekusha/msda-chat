@@ -21,13 +21,17 @@ export class FriendrequestdialogComponent {
     console.log(this.data)
   }
 
-  acceptFriendRequest(){
-    const currentUser = this.authService.getCurrentUser()
-    const receiverUuid = currentUser?.peerId
-    // const receiverUuid = this.signalingService.getCurrentUserUuid()
-    this.signalingService.emitFriendRequestAccepted(this.data.peerId, receiverUuid!)
-    this.dialogref.close(true)
-    console.log('dialog accepted' + this.data.peerId + receiverUuid)
+  acceptFriendRequest() {
+    this.authService.currentUser$.subscribe(currentUser => {
+      if (currentUser && currentUser.peerId) {
+        const receiverUuid = currentUser.peerId;
+        this.signalingService.emitFriendRequestAccepted(this.data.peerId, receiverUuid);
+        this.dialogref.close(true);
+        console.log('dialog accepted' + this.data.peerId + receiverUuid);
+      } else {
+        console.log('No current user or peerId found');
+      }
+    });
   }
 
   rejectFriendRequest(){

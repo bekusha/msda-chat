@@ -88,7 +88,9 @@ export class SignallingService {
     return this.listen('friend-request-received')
   }
 
-
+logOut(){
+ this.socket.disconnect();
+}
 
   
 

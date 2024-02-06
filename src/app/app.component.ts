@@ -39,7 +39,7 @@ export class AppComponent {
       
       switch (callData.status) {
         case 'incoming':
-          console.log(callData.user)
+          console.log(callData)
           this.handleIncomingCall(callData);
           
           break;
