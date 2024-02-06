@@ -10,74 +10,59 @@ import { User } from 'src/app/interfaces/user.interface';
   styleUrls: ['./call-notification.component.css']
 })
 export class CallNotificationComponent implements OnInit {
-
   @ViewChild('localVideo') localVideo!: ElementRef;
   @ViewChild('remoteVideo') remoteVideo!: ElementRef;
-  
 
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: CallData,
+    private dialogRef: MatDialogRef<CallNotificationComponent>,
+    private peerService: PeerService
+  ) {}
 
-constructor(
-  @Inject(MAT_DIALOG_DATA)
-  public data: CallData, 
-  private dialogRef:MatDialogRef<CallNotificationComponent>,
-  private peerService: PeerService){
- 
-}
+  callAccepted: boolean = false;
+  localStream!: MediaStream;
+  remoteStream!: MediaStream;
+  caller!: User;
 
-callAccepted: boolean = false;
-localStream! : MediaStream
-remoteStream!: MediaStream;
-caller!: User
+  ngOnInit(): void {
+    // Initialization logic can be added here if needed
+  }
 
+  private attachVideo(videoElement: HTMLVideoElement, stream: MediaStream) {
+    videoElement.srcObject = stream;
+    videoElement.onloadedmetadata = () => {
+      videoElement.play().catch(err => console.error('Error playing video:', err));
+    };
+  }
 
-ngOnInit(): void {
-// console.log(this.data.callerId)
-// const friendsList = JSON.parse(sessionStorage.getItem('friendsList') || '[]');
-// this.caller = this.findUserByPeerId(friendsList, this.data.callerId!);
-// console.log(this.caller)
-}
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
-// private findUserByPeerId(friendsList: any[], peerId: string) {
-//   return friendsList.find(user => user.peerId === peerId);
-// }
-private attachVideo(videoElement: HTMLVideoElement, stream: MediaStream) {
-  videoElement.srcObject = stream;
-  videoElement.onloadedmetadata = () => {
-    videoElement.play().catch(err => console.error('Error playing video:', err));
-  };
-}
+  acceptCall(): void {
+    console.log('Accepting Call:', this.data.call.peer);
 
-onNoClick(): void {
-  this.dialogRef.close();
-}
+    this.peerService.getUserMedia().then(localStream => {
+      this.attachVideo(this.localVideo.nativeElement, localStream);
+      this.localStream = localStream;
 
-acceptCall(): void {
-  console.log('Accepting Call: ' + this.data.call.peer);
-
-  this.peerService.getUserMedia().then((localStream) => {
-    this.attachVideo(this.localVideo.nativeElement, localStream);
-    this.localStream = localStream;
-  
-    this.peerService.answerCall(this.data.call).then((remoteStream) => {
-      console.log(this.data)
-      this.attachVideo(this.remoteVideo.nativeElement, remoteStream);
-      this.remoteStream = remoteStream;
-      this.callAccepted = true;
-    }).catch((err) => {
-      console.error('Error answering call:', err);
+      this.peerService.answerCall(this.data.call).then(remoteStream => {
+        this.attachVideo(this.remoteVideo.nativeElement, remoteStream);
+        this.remoteStream = remoteStream;
+        this.callAccepted = true;
+      }).catch(err => {
+        console.error('Error answering call:', err);
+        this.dialogRef.close({ callAccepted: false, error: err });
+      });
+    }).catch(err => {
+      console.error('Error getting local media:', err);
       this.dialogRef.close({ callAccepted: false, error: err });
     });
-  }).catch((err) => {
-    console.error('Error getting local media:', err);
-    this.dialogRef.close({ callAccepted: false, error: err });
-  });
-}
+  }
 
-rejectCall(): void {
-  console.log('Rejecting call:', this.data.call);
-  this.peerService.endCall(this.data.call)
-  this.dialogRef.close();
-}
-
-
+  rejectCall(): void {
+    console.log('Rejecting call:', this.data.call);
+    this.peerService.endCall(this.data.call);
+    this.dialogRef.close();
+  }
 }

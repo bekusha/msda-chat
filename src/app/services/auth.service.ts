@@ -2,7 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../interfaces/user.interface';
 import { SignallingService } from './signalling.service';
-import { v4 as uuidv4 } from 'uuid';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +11,15 @@ export class AuthService {
   userLoggedIn = new EventEmitter<User>();
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
-  private allUsers: User[] = [];
+  
 
   constructor(private signallingService: SignallingService) {
     this.loadCurrentUser();
   }
 
   private registerAndSetCurrentUser(user: User) {
-    this.signallingService.registerUser(user); // Register the user with the signalling service
-    this.currentUserSubject.next(user); // Set the user as the current user
+    this.signallingService.registerUser(user); 
+    this.currentUserSubject.next(user);
   }
 
   private loadCurrentUser() {

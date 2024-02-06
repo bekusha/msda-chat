@@ -8,37 +8,27 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class SignallingService {
-
-  private socket:any;
+  private socket: any;
   readonly uri: string = 'http://localhost:3000';
-  private friendsList: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([])
-  // private currentUserUuid: string | null = null;
-  
+  private friendsList: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 
-  constructor(
-    // private authService: AuthService
-  ) {
-    this.socket = io(this.uri)
-   
-   }
+  constructor() {
+    this.socket = io(this.uri);
+  }
 
-
-
-   registerUser(userData:User){
+  registerUser(userData: User) {
     this.socket.emit('register', userData);
-    console.log('register user from signalingService: ' + JSON.stringify(userData))
-   }
+    console.log('Register user from SignallingService: ' + JSON.stringify(userData));
+  }
 
- 
-
-  addFriend(user:User){
+  addFriend(user: User) {
     const currentFriends = this.friendsList.value;
-    if(!currentFriends.find(friend => friend.peerId === user.peerId)){
+    if (!currentFriends.find(friend => friend.peerId === user.peerId)) {
       this.friendsList.next([...currentFriends, user]);
     }
-   }
-   getFriendsListObservable() {
-    
+  }
+
+  getFriendsListObservable(): Observable<User[]> {
     return this.friendsList.asObservable();
   }
 
@@ -50,48 +40,43 @@ export class SignallingService {
     });
   }
 
-
-   emit(event: string, data: any) {
+  emit(event: string, data: any) {
     this.socket.emit(event, data);
     console.log(`Emitting event: ${event}`);
   }
 
   listen(eventName: string): Observable<any> {
-    return new Observable((subscriber) => {
+    return new Observable(subscriber => {
       this.socket.on(eventName, (data: any) => {
         subscriber.next(data);
-        console.log(data)
+        console.log(data);
       });
     });
-
-   
   }
 
-  emitFriendRequest(targetPeerId: string):void{
-    console.log('request sending' + targetPeerId)
-    this.socket.emit('send-friend-request', {target: targetPeerId})
+  emitFriendRequest(targetPeerId: string): void {
+    console.log('Request sending to ' + targetPeerId);
+    this.socket.emit('send-friend-request', { target: targetPeerId });
   }
 
-  emitFriendRequestAccepted(senderPeerId: string, targetPeerId: string): void{
-    console.log(senderPeerId)
-    this.socket.emit('accept-friend-request', { 
-      target: targetPeerId, 
-      senderUuid: senderPeerId 
-    })
+  emitFriendRequestAccepted(senderPeerId: string, targetPeerId: string): void {
+    console.log(`Accepting friend request from ${senderPeerId} to ${targetPeerId}`);
+    this.socket.emit('accept-friend-request', {
+      target: targetPeerId,
+      senderUuid: senderPeerId
+    });
   }
 
-  emitFriendRequestRejected(senderPeerId:string){
-    this.socket.emit('friend-request-rejected', {senderPeerId})
+  emitFriendRequestRejected(senderPeerId: string) {
+    console.log(`Rejecting friend request from ${senderPeerId}`);
+    this.socket.emit('friend-request-rejected', { senderPeerId });
   }
 
-  listenForFriendRequest():Observable<any>{
-    return this.listen('friend-request-received')
+  listenForFriendRequest(): Observable<any> {
+    return this.listen('friend-request-received');
   }
 
-logOut(){
- this.socket.disconnect();
-}
-
-  
-
+  logOut() {
+    this.socket.disconnect();
+  }
 }
