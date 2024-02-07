@@ -20,6 +20,7 @@ export class AppLayoutComponent {
   
   logout(){
     this.peerService.logout()
+    localStorage.removeItem('friendsList');
     this.router.navigate([''])
     this.signalingService.logOut()
     this.authService.logout()

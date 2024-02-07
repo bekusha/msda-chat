@@ -66,8 +66,11 @@ export class AppComponent {
   private handleIncomingCall(callData: CallData) {
     console.log(callData);
     const dialogRef = this.dialog.open(CallNotificationComponent, {
-      width: '250px',
-      data: callData 
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      width: '80%',
+      height: 'auto',
+      data: callData
     });
     
 

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { CallData } from 'src/app/interfaces/callData.interface';
 import { CallNotificationComponent } from '../call-notification/call-notification.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-userslist',
@@ -21,6 +22,7 @@ export class UserslistComponent {
   public friendsList: User[] | null = [];
   localStream!: MediaStream;
   showAllUsers = false;
+  private friendsListSubscription: Subscription | null = null;
 
 
   constructor(
@@ -32,6 +34,7 @@ export class UserslistComponent {
   ) {}
 
   ngOnInit(): void {
+    this.loadFriendsListFromLocalStorage()
     this.updateUsersList();
     this.updateFriendsList();
   }
@@ -42,11 +45,28 @@ export class UserslistComponent {
     });
   }
 
+  loadFriendsListFromLocalStorage(): void {
+    const storedFriendsList = localStorage.getItem('friendsList');
+    if (storedFriendsList) {
+      this.friendsList = JSON.parse(storedFriendsList);
+    }
+  }
+
   updateFriendsList(): void {
-    this.signalingService.listenForFriendsListUpdate().subscribe((newFriend: User) => {
-      this.friendsList!.push(newFriend);
+    this.friendsListSubscription = this.signalingService.listenForFriendsListUpdate().subscribe((newFriend: User) => {
+      if (!this.friendsList) {
+        this.friendsList = [];
+      }
+      this.friendsList.push(newFriend);
+      localStorage.setItem('friendsList', JSON.stringify(this.friendsList)); // Save updated list to localStorage
     });
   }
+
+  // updateFriendsList(): void {
+  //   this.signalingService.listenForFriendsListUpdate().subscribe((newFriend: User) => {
+  //     this.friendsList!.push(newFriend);
+  //   });
+  // }
 
   toggleAllUsers() {
     this.showAllUsers = !this.showAllUsers;
