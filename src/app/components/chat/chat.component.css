@@ -38,7 +38,6 @@
   background-color: #42a5f5; /* Light blue background */
   text-align: right; /* Align text to the right */
   margin-left: auto; /* Push the message box to the right */
-  color: white; /* White text color */
 }
 
 .messages-list {
@@ -59,7 +58,7 @@
 
 .messageTime {
   position: absolute;
-  top: 1%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
 }

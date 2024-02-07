@@ -60,7 +60,6 @@
 }
 
 .friendsCard {
-  min-width: 17rem;
   transition: transform 0.3s ease-in-out; /* Smooth transition for hover effect */
 }
 
@@ -80,8 +79,9 @@ button {
 
 .friendsListItem {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  gap: 2rem;
 }
 
 @keyframes arrowBounce {
