@@ -1,10 +1,12 @@
-.message-container {
+/* .message-container {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+} */
+.chat-container {
+  min-height: 100vh;
 }
-
 .message {
   position: relative;
   padding: 10px;
@@ -61,9 +63,34 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
+/* 
 .callButton {
   position: absolute;
   right: 1rem;
   top: 4rem;
+} */
+
+.callButton {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.video-container {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 45%; /* Adjust the width of video elements as needed */
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visual */
 }

@@ -21,7 +21,7 @@ export class UserslistComponent {
   public friendsList: User[] | null = [];
   localStream!: MediaStream;
   showAllUsers = false;
-  private readonly allUserKey = 'allUsers';
+
 
   constructor(
     private authService: AuthService,
@@ -32,12 +32,17 @@ export class UserslistComponent {
   ) {}
 
   ngOnInit(): void {
+    this.updateUsersList();
+    this.updateFriendsList();
+  }
+  updateUsersList(): void {
     this.signalingService.listen('users-list').subscribe((usersData: User[]) => {
       this.allUsers = usersData;
       console.log('Updated users list:', this.allUsers);
     });
+  }
 
-    console.log(this.allUsers);
+  updateFriendsList(): void {
     this.signalingService.listenForFriendsListUpdate().subscribe((newFriend: User) => {
       this.friendsList!.push(newFriend);
     });

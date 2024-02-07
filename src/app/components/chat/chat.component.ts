@@ -24,6 +24,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   localStream: MediaStream | null = null;
   remoteStream!: MediaStream;
   currentCall : MediaConnection | null = null
+  inCall = false
   private authSubscription!: Subscription;
 
   constructor(
@@ -33,21 +34,38 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.subscribeToUserUpdates();
+    this.subscribeToRouteParams();
+    this.setupMessageHandling();
+    this.subscribeToRemoteStream();
+  }
+
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
+  subscribeToUserUpdates(): void {
     this.authSubscription = this.authService.currentUser$.subscribe(user => {
       this.myId = user ? user.peerId : '';
     });
+  }
 
+  subscribeToRouteParams(): void {
     this.route.queryParams.subscribe(params => {
       const selectedUserPeerId = params['peerId'];
-      
-      console.log(selectedUserPeerId);
       if (selectedUserPeerId) {
         this.currentPeerId = selectedUserPeerId;
         this.peerService.connectToPeer(this.currentPeerId);
       }
     });
+  }
 
+  setupMessageHandling(): void {
     this.messages = this.peerService.getMessages();
+  }
+
+  subscribeToRemoteStream(): void {
     this.peerService.getRemoteStreamObservable().subscribe((stream) => {
       if (stream) {
         this.handleRemoteStream(stream);
@@ -55,7 +73,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  cleanupSubscriptions(): void {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
@@ -82,6 +100,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   initiateCall() {
+    this.inCall = true
     if (!this.currentPeerId) {
       console.error('No Peer selected to call');
       return;
@@ -108,6 +127,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
   
   endCall() {
+    this.inCall = false
     if (this.currentCall) {
       this.peerService.endCall(this.currentCall);
       this.currentCall = null; // Reset the currentCall to null after ending the call

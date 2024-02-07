@@ -84,19 +84,10 @@ button {
   align-items: center;
 }
 
-a {
-  color: inherit; /* Ensures links use the current text color */
-  text-decoration: none; /* Removes underline from links */
-}
-
-a:hover {
-  text-decoration: underline; /* Adds underline on hover for a visual cue */
-}
-
 @keyframes arrowBounce {
   0%,
   100% {
-    transform: translateX(0);
+    transform: translateX();
   }
   50% {
     transform: translateX(5px);
@@ -104,10 +95,14 @@ a:hover {
 }
 .arrow {
   transition: transform 0.3s ease-in-out; /* Smooth transition for the transform */
+  transform: rotate(90deg); /* Start with arrow pointing downwards */
 }
 
+.arrowUp {
+  transform: rotate(-90deg); /* Rotate arrow to point upwards */
+}
 .arrowDown {
-  transform: rotate(90deg); /* Rotate arrow to point downwards */
+  transform: rotate(270deg); /* Rotate arrow to point downwards */
 }
 
 /* Responsive adjustments */
