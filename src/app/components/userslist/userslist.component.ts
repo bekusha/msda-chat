@@ -94,6 +94,7 @@ export class UserslistComponent {
 
   selectUserForChat(user: User) {
     const selectedUserPeerId = user.peerId;
+    console.log(user.name)
     this.router.navigate(['chat'], { queryParams: { peerId: selectedUserPeerId } });
   }
 

@@ -26,6 +26,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   currentCall : MediaConnection | null = null
   inCall = false
   private authSubscription!: Subscription;
+  
 
   constructor(
     private peerService: PeerService,
@@ -38,6 +39,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.subscribeToRouteParams();
     this.setupMessageHandling();
     this.subscribeToRemoteStream();
+    
   }
 
   ngOnDestroy(): void {
@@ -55,6 +57,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       const selectedUserPeerId = params['peerId'];
       if (selectedUserPeerId) {
+        
         this.currentPeerId = selectedUserPeerId;
         this.peerService.connectToPeer(this.currentPeerId);
       }
@@ -91,7 +94,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       sender: this.myId,
       receiver: this.currentPeerId,
       timedate: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      data: this.newMessage
+      data: this.newMessage,
     };
 
     this.peerService.sendData(this.currentPeerId, message);
@@ -100,6 +103,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   initiateCall() {
+    
     this.inCall = true
     if (!this.currentPeerId) {
       console.error('No Peer selected to call');

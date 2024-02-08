@@ -22,9 +22,28 @@ export class LoginComponent {
     private router: Router
   ) {}
 
+  ngOnInit() {
+    this.loadUserDetailsForAutofill();
+  }
+
+  private loadUserDetailsForAutofill() {
+    const userDetailsForAutofill = localStorage.getItem('userDetailsForAutofill');
+    if (userDetailsForAutofill) {
+      const { name, lastName, username } = JSON.parse(userDetailsForAutofill);
+      this.user.name = name;
+      this.user.lastName = lastName;
+      this.user.username = username;
+    }
+  }
+
   login() {
     this.assignPeerIdIfNeeded();
     this.authService.login(this.user); 
+    localStorage.setItem('userDetailsForAutofill', JSON.stringify({
+      name: this.user.name,
+      lastName: this.user.lastName,
+      username: this.user.username
+    }));
     this.router.navigate(['userslist']);
   }
 

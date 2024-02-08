@@ -25,6 +25,7 @@ export class SignallingService {
     const currentFriends = this.friendsList.value;
     if (!currentFriends.find(friend => friend.peerId === user.peerId)) {
       this.friendsList.next([...currentFriends, user]);
+      console.log(currentFriends)
     }
   }
 
