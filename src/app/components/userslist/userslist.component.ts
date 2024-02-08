@@ -23,7 +23,8 @@ export class UserslistComponent {
   localStream!: MediaStream;
   showAllUsers = false;
   private friendsListSubscription: Subscription | null = null;
-
+  isCallIncoming = false;
+  isNewMessageReceived = false;
 
   constructor(
     private authService: AuthService,
@@ -37,12 +38,30 @@ export class UserslistComponent {
     this.loadFriendsListFromLocalStorage()
     this.updateUsersList();
     this.updateFriendsList();
+    this.subscribeToMessages();
   }
   updateUsersList(): void {
     this.signalingService.listen('users-list').subscribe((usersData: User[]) => {
       this.allUsers = usersData;
       console.log('Updated users list:', this.allUsers);
     });
+  }
+
+  private subscribeToMessages(): void {
+    this.peerService.messageReceived$.subscribe(message => {
+      console.log(message)
+      // Assuming the message contains enough information to identify the user (e.g., userId)
+      this.updateMessageIconForUser(message.sender);
+    });
+  }
+
+  private updateMessageIconForUser(peerId: string): void {
+    const user = this.friendsList?.find(u => u.peerId === peerId);
+    console.log(user)
+    if (user) {
+      user.hasNewMessage = true;
+      console.log(user)
+    }
   }
 
   loadFriendsListFromLocalStorage(): void {
@@ -62,11 +81,6 @@ export class UserslistComponent {
     });
   }
 
-  // updateFriendsList(): void {
-  //   this.signalingService.listenForFriendsListUpdate().subscribe((newFriend: User) => {
-  //     this.friendsList!.push(newFriend);
-  //   });
-  // }
 
   toggleAllUsers() {
     this.showAllUsers = !this.showAllUsers;
@@ -84,6 +98,7 @@ export class UserslistComponent {
   }
 
   openCallDialog(callData: CallData) {
+    console.log(callData)
     const dialogRef = this.dialog.open(CallNotificationComponent, {
       width: '350px',
       data: callData

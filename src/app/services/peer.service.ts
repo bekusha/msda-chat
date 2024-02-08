@@ -23,6 +23,8 @@ export class PeerService {
   private remoteStream: MediaStream | null = null;
   private remoteStreamSubject = new BehaviorSubject<MediaStream | null>(null);
   private currentUserSubscription!: Subscription;
+  private messageReceivedSource = new Subject<any>();
+  messageReceived$ = this.messageReceivedSource.asObservable();
 
   constructor(private authService: AuthService) {
     this.currentUserSubscription = this.subscribeToUser();
@@ -191,6 +193,7 @@ export class PeerService {
     const message = data as Message;
     if (message && typeof message === 'object') {
       console.log('Received data:', message);
+      this.messageReceivedSource.next(message);
       this.messages.push(message);
     } else {
       console.error('Received data is not a valid Message:', data);

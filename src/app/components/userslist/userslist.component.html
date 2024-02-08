@@ -34,6 +34,7 @@
           <mat-list-item *ngFor="let friend of friendsList" fxLayout="row" fxLayoutAlign="space-between center">
             <div class="friendsListItem">
               {{ friend.name }} {{friend.lastName}}
+              <mat-icon *ngIf="friend.hasNewMessage" class="newMessageIcon">message</mat-icon>
               <button mat-raised-button color="accent" (click)="selectUserForChat(friend)">Chat</button>
             </div>
           </mat-list-item>

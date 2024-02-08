@@ -2,5 +2,6 @@ export interface User{
     peerId?:any,
     name:string,
     lastName:string,
-    username:string
+    username:string,
+    hasNewMessage?:boolean
 }
