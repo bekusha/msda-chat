@@ -16,6 +16,20 @@ export class SignallingService {
     this.socket = io(this.uri);
   }
 
+  initiateCall(targetPeerId: string, additionalData?: User): void {
+    console.log(`Initiating call to ${targetPeerId} with data:`, additionalData);
+    this.socket.emit('initiateCall', { targetPeerId, ...additionalData });
+  }
+
+  listenForIncomingCall(): Observable<any> {
+    return new Observable(subscriber => {
+      this.socket.on('callInitiated', (data: any) => {
+        subscriber.next(data);
+        console.log('Incoming call with data:', data);
+      });
+    });
+  }
+
   registerUser(userData: User) {
     this.socket.emit('register', userData);
     console.log('Register user from SignallingService: ' + JSON.stringify(userData));

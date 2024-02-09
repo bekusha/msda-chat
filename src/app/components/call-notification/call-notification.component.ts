@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PeerService } from 'src/app/services/peer.service';
 import { CallData } from 'src/app/interfaces/callData.interface';
 import { User } from 'src/app/interfaces/user.interface';
+import { SignallingService } from 'src/app/services/signalling.service';
 
 @Component({
   selector: 'app-call-notification',
@@ -16,7 +17,8 @@ export class CallNotificationComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CallData,
     private dialogRef: MatDialogRef<CallNotificationComponent>,
-    private peerService: PeerService
+    private peerService: PeerService,
+    private signallingService: SignallingService
   ) {}
 
   callAccepted: boolean = false;
@@ -25,7 +27,7 @@ export class CallNotificationComponent implements OnInit {
   caller!: User;
 
   ngOnInit(): void {
-    // Initialization logic can be added here if needed
+    console.log(this.data.user)
   }
 
   private attachVideo(videoElement: HTMLVideoElement, stream: MediaStream) {

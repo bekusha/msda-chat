@@ -40,12 +40,22 @@ export class UserslistComponent {
     this.updateFriendsList();
     this.subscribeToMessages();
   }
+
   updateUsersList(): void {
     this.signalingService.listen('users-list').subscribe((usersData: User[]) => {
-      this.allUsers = usersData;
+      // Assuming each user has a unique 'peerId'
+      const uniqueUsers = Array.from(new Map(usersData.map(user => [user.peerId, user])).values());
+      this.allUsers = uniqueUsers;
       console.log('Updated users list:', this.allUsers);
     });
   }
+  
+  // updateUsersList(): void {
+  //   this.signalingService.listen('users-list').subscribe((usersData: User[]) => {
+  //     this.allUsers = usersData;
+  //     console.log('Updated users list:', this.allUsers);
+  //   });
+  // }
 
   private subscribeToMessages(): void {
     this.peerService.messageReceived$.subscribe(message => {

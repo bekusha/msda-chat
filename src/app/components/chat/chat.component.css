@@ -84,12 +84,12 @@
 
 .video-wrapper {
   position: relative;
-  width: 45%; /* Adjust the width of video elements as needed */
+  width: 45%;
 }
 
 .video-wrapper video {
   width: 100%;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visual */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

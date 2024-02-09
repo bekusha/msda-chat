@@ -16,13 +16,14 @@ import { CallData } from './interfaces/callData.interface';
 })
 export class AppComponent {
   title = 'messenger';
-  
+  private caller!: User
 
   constructor(
     private signalingService: SignallingService,
     private peerService: PeerService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    
   ){
    
    
@@ -33,7 +34,11 @@ export class AppComponent {
       this.openFriendRequestDialog(request.from);
       console.log(request)
     })
-  
+  this.signalingService.listenForIncomingCall().subscribe((data)=>{
+    console.log(data)
+    this.caller = data.userData
+    
+  })
     this.peerService.getCallStream().subscribe((callData: CallData) => {
       console.log('Call event received:', callData);
       
@@ -65,6 +70,8 @@ export class AppComponent {
 
   private handleIncomingCall(callData: CallData) {
     console.log(callData);
+    callData.user = this.caller
+    console.log(callData.user)
     const dialogRef = this.dialog.open(CallNotificationComponent, {
       maxWidth: '100vw',
       maxHeight: '100vh',

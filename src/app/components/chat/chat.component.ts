@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
 import { MediaConnection } from 'peerjs';
 import { User } from 'src/app/interfaces/user.interface';
+import { SignallingService } from 'src/app/services/signalling.service';
 
 @Component({
   selector: 'app-chat',
@@ -26,12 +27,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   currentCall : MediaConnection | null = null
   inCall = false
   private authSubscription!: Subscription;
+  currentUser! : User
   
 
   constructor(
     private peerService: PeerService,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private signalingService: SignallingService
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +53,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   subscribeToUserUpdates(): void {
     this.authSubscription = this.authService.currentUser$.subscribe(user => {
       this.myId = user ? user.peerId : '';
+      this.currentUser = user!
+      console.log(user)
     });
   }
 
@@ -114,8 +119,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.localStream = localStream;
       this.localVideo.nativeElement.srcObject = localStream;
       this.localVideo.nativeElement.muted = true;
-      
+      this.signalingService.initiateCall(this.currentPeerId, this.currentUser)
       this.peerService.initiateCall(this.currentPeerId)
+      
         .then(call => {
           this.currentCall = call; // Assign the call object to this.currentCall
           console.log('Call initiated successfully: ' );
