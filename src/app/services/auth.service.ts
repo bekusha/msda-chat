@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   private loadCurrentUser() {
-    const storedUser = localStorage.getItem('currentUser');
+    const storedUser = sessionStorage.getItem('currentUser');
     if (storedUser) {
       const retrievedUser: User = JSON.parse(storedUser);
       this.registerAndSetCurrentUser(retrievedUser);
@@ -35,17 +35,17 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(user: User) {
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    this.registerAndSetCurrentUser(user);
-  }
+  // login(user: User) {
+  //   // localStorage.setItem('currentUser', JSON.stringify(user));
+  //   // this.registerAndSetCurrentUser(user);
+  // }
 
   // doesUsernameExist(username: string): boolean {
   //   return this.allUsers.some(user => user.username === username);
   // }
 
   logout() {
-    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
 }

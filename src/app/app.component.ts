@@ -68,6 +68,12 @@ export class AppComponent {
     
   }
 
+  ngOnDestroy(): void {
+ this.signalingService.logOut()
+ console.log('logouted')
+    
+  }
+
   private handleIncomingCall(callData: CallData) {
     console.log(callData);
     callData.user = this.caller

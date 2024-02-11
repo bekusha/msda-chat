@@ -38,7 +38,7 @@ export class LoginComponent {
 
   login() {
     this.assignPeerIdIfNeeded();
-    this.authService.login(this.user); 
+    // this.authService.login(this.user); 
     localStorage.setItem('userDetailsForAutofill', JSON.stringify({
       name: this.user.name,
       lastName: this.user.lastName,
@@ -50,7 +50,7 @@ export class LoginComponent {
   private assignPeerIdIfNeeded() {
     if (!this.user.peerId) {
       this.user.peerId = uuidv4();
-      localStorage.setItem('currentUser', JSON.stringify(this.user));
+      sessionStorage.setItem('currentUser', JSON.stringify(this.user));
     }
   }
 }

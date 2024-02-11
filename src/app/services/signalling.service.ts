@@ -9,7 +9,9 @@ import { AuthService } from './auth.service';
 })
 export class SignallingService {
   private socket: any;
-  readonly uri: string = 'https://signalingserver-lnqa.onrender.com'
+  readonly uri: string = 'https://signalingserver-k0wr.onrender.com'
+
+
 
   ;
   private friendsList: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);

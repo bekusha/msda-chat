@@ -30,10 +30,10 @@
   <!-- Video Section -->
  <div class="video-container" *ngIf="inCall">
   <div class="video-wrapper">
-    <video #localVideo autoplay muted></video> <!-- Video for the caller -->
+    <video #localVideo autoplay muted fxFlex playsinline webkit-playsinline></video> <!-- Video for the caller -->
   </div>
   <div class="video-wrapper">
-    <video #remoteVideo autoplay></video> <!-- Video for the receiver -->
+    <video #remoteVideo autoplay fxFlex playsinline webkit-playsinline></video>
   </div>
 </div>
 </div>
