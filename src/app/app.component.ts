@@ -34,12 +34,7 @@ export class AppComponent {
       this.openFriendRequestDialog(request.from);
       console.log(request)
     })
-  this.signalingService.listenForIncomingCall().subscribe((data)=>{
-    console.log(data)
-    this.caller = data.userData
-    
-  })
-    this.peerService.getCallStream().subscribe((callData: CallData) => {
+  this.peerService.getCallStream().subscribe((callData: CallData) => {
       console.log('Call event received:', callData);
       
       switch (callData.status) {
@@ -70,33 +65,39 @@ export class AppComponent {
 
   ngOnDestroy(): void {
  this.signalingService.logOut()
- console.log('logouted')
+ 
     
   }
 
   private handleIncomingCall(callData: CallData) {
-    console.log(callData);
-    callData.user = this.caller
-    console.log(callData.user)
-    const dialogRef = this.dialog.open(CallNotificationComponent, {
-      maxWidth: '100vw',
-      maxHeight: '100vh',
-      width: '80%',
-      height: 'auto',
-      data: callData
-    });
+    this.signalingService.listenForIncomingCall().subscribe((data)=>{
+    
+      this.caller = data.userData
+      console.log(this.caller);
+      callData.user = this.caller
+      console.log(callData.user)
+      const dialogRef = this.dialog.open(CallNotificationComponent, {
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        width: '80%',
+        height: 'auto',
+        data: callData
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed. Result:', result);
+        if (result && result.callAccepted) {
+          console.log('Call accepted by the user.');
+          // Here you can handle call acceptance, e.g., show the video call interface
+        } else {
+          console.log('Call rejected or dismissed by the user.');
+          // Here you can handle call rejection or dismissal
+        }
+      });
+    })
+ 
     
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed. Result:', result);
-      if (result && result.callAccepted) {
-        console.log('Call accepted by the user.');
-        // Here you can handle call acceptance, e.g., show the video call interface
-      } else {
-        console.log('Call rejected or dismissed by the user.');
-        // Here you can handle call rejection or dismissal
-      }
-    });
+ 
   }
 
 

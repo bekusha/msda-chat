@@ -42,7 +42,7 @@ export class CallNotificationComponent implements OnInit {
   }
 
   acceptCall(): void {
-    console.log('Accepting Call:', this.data.call.peer);
+    console.log('Accepting Call:', this.data.call.peer, this.data.user);
 
     this.peerService.getUserMedia().then(localStream => {
       this.attachVideo(this.localVideo.nativeElement, localStream);
