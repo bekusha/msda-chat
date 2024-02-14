@@ -1,27 +1,49 @@
 # Messenger
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.8.
+This Messenger application is a web-based chat and video call platform, generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.8. It allows users to easily connect, send messages, and make video calls in real-time.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Real-time text messaging
+- Video calling
+- User authentication and friend list management
+- Responsive design for desktop and mobile devices
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Getting Started
 
-## Build
+### Prerequisites
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (version 12.x or later)
+- [Angular CLI](https://angular.io/cli) (version 16.2.8 or later)
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Development server
 
-## Running end-to-end tests
+1. Clone the repository:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+git clone https://github.com/bekusha/msda-chat
+cd msda-chat
+```
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Install Defendencies
+
+npm install
+
+
+### Run The Development Server
+
+ng serve
+
+
+
+### Code scaffolding
+
+ng generate component component-name
+
+### Build
+
+ng build
