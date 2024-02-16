@@ -10,7 +10,7 @@
       <mat-nav-list *ngIf="showAllUsers && allUsers?.length! > 0" fxLayout="column">
         <mat-list-item *ngFor="let user of allUsers" fxLayout="row" fxLayoutAlign="space-between center">
           <span>{{ user.name }} {{ user.lastName }}</span>
-          <button mat-stroked-button (click)="sendFriendRequest(user.peerId)">Add</button>
+          <button class="addButton" mat-stroked-button color="primary" (click)="sendFriendRequest(user.peerId)">Add</button>
         </mat-list-item>
       </mat-nav-list>
   

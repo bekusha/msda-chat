@@ -77,6 +77,10 @@ button {
   transition: background-color 0.3s ease-in-out; /* Smooth transition for background color change */
 }
 
+.addButton {
+  margin-bottom: 0.9rem;
+}
+
 .friendsListItem {
   display: flex;
   justify-content: space-around;
